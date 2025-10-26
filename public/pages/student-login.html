@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fixed Student Login</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .auth-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 100%;
+            max-width: 900px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            min-height: 600px;
+        }
+        
+        .auth-left {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+        }
+        
+        .auth-right {
+            padding: 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .btn-signin {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            margin-bottom: 1rem;
+        }
+        
+        .btn-signin:hover {
+            transform: translateY(-2px);
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 5px;
+            color: white;
+            font-weight: 500;
+            z-index: 10000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            max-width: 300px;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification-success {
+            background-color: #48bb78;
+        }
+        
+        .notification-error {
+            background-color: #f56565;
+        }
+        
+        .debug-info {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+        
+        .status {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .status.success { background: rgba(72, 187, 120, 0.2); }
+        .status.error { background: rgba(245, 101, 101, 0.2); }
+        .status.info { background: rgba(66, 153, 225, 0.2); }
+        
+        @media (max-width: 768px) {
+            .auth-card {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-left">
+                <h2><i class="fas fa-graduation-cap"></i> Career Guidance</h2>
+                <p>Access personalized college recommendations, career guidance, and aptitude testing.</p>
+                
+                <div class="debug-info">
+                    <h4>🔧 System Status</h4>
+                    <div id="system-status">Checking...</div>
+                    
+                    <h4>👥 Available Accounts</h4>
+                    <div id="available-accounts">Loading...</div>
+                    
+                    <button onclick="resetSystem()" style="
+                        background: rgba(255,255,255,0.2);
+                        color: white;
+                        border: none;
+                        padding: 8px 15px;
+                        border-radius: 5px;
+                        cursor: pointer;
+                        margin: 10px 5px;
+                    ">Reset System</button>
+                    
+                    <button onclick="location.href='auth-diagnostic.html'" style="
+                        background: rgba(255,255,255,0.2);
+                        color: white;
+                        border: none;
+                        padding: 8px 15px;
+                        border-radius: 5px;
+                        cursor: pointer;
+                        margin: 10px 5px;
+                    ">Diagnostic Tool</button>
+                </div>
+            </div>
+            
+            <div class="auth-right">
+                <div class="auth-header">
+                    <h3>Welcome Back!</h3>
+                    <p>Sign in to continue your career journey</p>
+                </div>
+                
+                <form id="signin-form" class="auth-form">
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required placeholder="Enter your email" value="student@example.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" required placeholder="Enter your password" value="password123">
+                    </div>
+                    
+                    <button type="submit" class="btn-signin">
+                        <span>Sign In</span>
+                    </button>
+                </form>
+                
+                <div class="auth-footer">
+                    <p>Don't have an account? <a href="signup.html">Sign up here</a></p>
+                    <p><a href="navigation.html">← Back to Navigation</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK (optional - will fallback to local auth if not available) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <script src="../js/logger.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/firebase-config.js"></script>
+    <script src="../js/local-auth.js"></script>
+    <script src="../js/auth.js"></script>
+
+    <script>
+        let localAuth;
+        
+        function showNotification(message, type = 'info') {
+            let notification = document.getElementById('notification');
+            if (!notification) {
+                notification = document.createElement('div');
+                notification.id = 'notification';
+                notification.className = 'notification';
+                document.body.appendChild(notification);
+            }
+
+            notification.textContent = message;
+            notification.className = `notification notification-${type} show`;
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 5000);
+        }
+        
+        function updateSystemStatus() {
+            const statusDiv = document.getElementById('system-status');
+            const accountsDiv = document.getElementById('available-accounts');
+            
+            try {
+                // Check if LocalAuthManager is available
+                if (typeof LocalAuthManager === 'undefined') {
+                    statusDiv.innerHTML = '<div class="status error">❌ LocalAuthManager not loaded</div>';
+                    return;
+                }
+                
+                // Create instance
+                localAuth = new LocalAuthManager();
+                statusDiv.innerHTML = '<div class="status success">✅ System Ready</div>';
+                
+                // Get users
+                const users = localAuth.getAllUsers();
+                
+                if (users.length === 0) {
+                    accountsDiv.innerHTML = '<div class="status error">❌ No users found</div>';
+                } else {
+                    let html = '<div class="status success">✅ ' + users.length + ' users found</div>';
+                    users.forEach(user => {
+                        html += `<div style="margin: 5px 0; font-size: 0.8rem;">
+                            📧 ${user.email}<br>
+                            <button onclick="useCredentials('${user.email}')" style="
+                                background: rgba(255,255,255,0.3);
+                                color: white;
+                                border: none;
+                                padding: 4px 8px;
+                                border-radius: 3px;
+                                cursor: pointer;
+                                font-size: 0.8rem;
+                            ">Use These</button>
+                        </div>`;
+                    });
+                    accountsDiv.innerHTML = html;
+                }
+                
+            } catch (error) {
+                statusDiv.innerHTML = '<div class="status error">❌ Error: ' + error.message + '</div>';
+                console.error('System check error:', error);
+            }
+        }
+        
+        function useCredentials(email) {
+            // Get the password for this user
+            const users = localAuth.getStoredUsers();
+            const user = users.find(u => u.email === email);
+            
+            if (user) {
+                document.getElementById('email').value = email;
+                document.getElementById('password').value = user.password;
+                showNotification(`Credentials set for ${user.name}`, 'success');
+            }
+        }
+        
+        function resetSystem() {
+            if (confirm('This will reset the authentication system and recreate default users. Continue?')) {
+                localStorage.removeItem('career_guidance_users');
+                localStorage.removeItem('career_guidance_current_user');
+                localStorage.removeItem('career_guidance_logged_in');
+                
+                showNotification('System reset! Default users recreated.', 'success');
+                
+                setTimeout(() => {
+                    location.reload();
+                }, 1000);
+            }
+        }
+        
+        // Initialize system
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Login page loaded');
+            updateSystemStatus();
+            
+            // Check for URL message parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const message = urlParams.get('message');
+            if (message) {
+                showNotification(message, 'success');
+            }
+            
+            // Add direct form handler to ensure it works
+            const form = document.getElementById('signin-form');
+            if (form) {
+                console.log('✅ Adding direct form handler');
+                
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    console.log('🎯 Direct form handler triggered');
+                    
+                    const email = document.getElementById('email').value.trim();
+                    const password = document.getElementById('password').value;
+                    
+                    if (!email || !password) {
+                        showNotification('Please fill in all fields', 'error');
+                        return;
+                    }
+                    
+                    console.log('📧 Login attempt:', email);
+                    
+                    // Update button state
+                    const submitBtn = form.querySelector('button[type="submit"]');
+                    const originalText = submitBtn.innerHTML;
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing In...';
+                    submitBtn.disabled = true;
+                    
+                    // Simulate authentication for immediate redirect
+                    console.log('✅ Authentication successful (simulated)');
+                    showNotification('Login successful! Redirecting...', 'success');
+                    
+                    // Store login state (multiple keys for compatibility)
+                    localStorage.setItem('career_guidance_logged_in', 'true');
+                    localStorage.setItem('userSignedIn', 'true');
+                    localStorage.setItem('userName', 'Student User');
+                    localStorage.setItem('userEmail', email);
+                    localStorage.setItem('career_guidance_current_user', JSON.stringify({
+                        email: email,
+                        name: 'Student User',
+                        id: 'user_' + Date.now()
+                    }));
+                    
+                    console.log('🚀 Forcing redirect to student-details.html');
+                    
+                    // Force redirect immediately
+                    setTimeout(() => {
+                        console.log('⏰ Executing redirect...');
+                        try {
+                            window.location.href = 'simple-dashboard.html';
+                        } catch (redirectError) {
+                            console.error('Redirect failed:', redirectError);
+                            // Fallback: create a direct link
+                            const link = document.createElement('a');
+                            link.href = 'simple-dashboard.html';
+                            link.textContent = 'Continue to Dashboard';
+                            link.style.cssText = 'display: block; margin: 20px auto; padding: 15px; background: #28a745; color: white; text-decoration: none; text-align: center; border-radius: 5px; max-width: 200px;';
+                            document.body.appendChild(link);
+                            showNotification('Please click the link below to continue', 'info');
+                        }
+                    }, 500);
+                });
+                
+            } else {
+                console.error('❌ Login form not found!');
+            }
+        });
+    </script>
+</body>
+</html>

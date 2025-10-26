@@ -1,0 +1,134 @@
+{
+  "name": "career-guidance-app",
+  "version": "1.0.0",
+  "description": "A comprehensive web platform designed to help students discover their ideal career paths and find suitable colleges",
+  "main": "public/index.html",
+  "scripts": {
+    "start": "firebase serve",
+    "build": "npm run minify-css && npm run minify-js",
+    "minify-css": "cleancss -o public/css/style.min.css public/css/style.css && cleancss -o public/css/responsive.min.css public/css/responsive.css",
+    "minify-js": "terser public/js/app.js -o public/js/app.min.js && terser public/js/auth.js -o public/js/auth.min.js",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "deploy": "firebase deploy",
+    "deploy:hosting": "firebase deploy --only hosting",
+    "deploy:rules": "firebase deploy --only firestore:rules,storage:rules",
+    "emulators": "firebase emulators:start",
+    "lint": "eslint public/js/**/*.js",
+    "lint:fix": "eslint public/js/**/*.js --fix",
+    "format": "prettier --write public/**/*.{html,css,js}",
+    "setup": "npm install && firebase login && firebase init",
+    "setup:data": "node scripts/setup-data.js",
+    "dev": "live-server public/",
+    "validate": "html-validate public/**/*.html",
+    "clean": "rimraf dist/ .firebase/ node_modules/.cache/"
+  },
+  "keywords": [
+    "career",
+    "guidance",
+    "education",
+    "college",
+    "aptitude",
+    "test",
+    "firebase",
+    "web-app",
+    "student",
+    "university"
+  ],
+  "author": "Career Guidance Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/career-guidance.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/career-guidance/issues"
+  },
+  "homepage": "https://github.com/yourusername/career-guidance#readme",
+  "devDependencies": {
+    "@babel/core": "^7.22.0",
+    "@babel/preset-env": "^7.22.0",
+    "clean-css-cli": "^5.6.0",
+    "eslint": "^8.42.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.0",
+    "firebase-tools": "^12.0.0",
+    "html-validate": "^8.0.0",
+    "jest": "^29.5.0",
+    "jest-environment-jsdom": "^29.5.0",
+    "live-server": "^1.2.2",
+    "prettier": "^2.8.0",
+    "rimraf": "^5.0.0",
+    "terser": "^5.17.0"
+  },
+  "dependencies": {
+    "firebase": "^9.22.0",
+    "firebase-admin": "^11.8.0"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie 11"
+  ],
+  "jest": {
+    "testEnvironment": "jsdom",
+    "setupFilesAfterEnv": ["<rootDir>/tests/setup.js"],
+    "testMatch": ["<rootDir>/tests/**/*.test.js"],
+    "collectCoverageFrom": [
+      "public/js/**/*.js",
+      "!public/js/firebase-config.js",
+      "!public/js/**/*.min.js"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 80,
+        "functions": 80,
+        "lines": 80,
+        "statements": 80
+      }
+    }
+  },
+  "eslintConfig": {
+    "env": {
+      "browser": true,
+      "es2021": true,
+      "jest": true
+    },
+    "extends": [
+      "eslint:recommended",
+      "prettier"
+    ],
+    "parserOptions": {
+      "ecmaVersion": 12,
+      "sourceType": "module"
+    },
+    "rules": {
+      "no-console": "warn",
+      "no-unused-vars": "error",
+      "prefer-const": "error",
+      "no-var": "error"
+    },
+    "globals": {
+      "firebase": "readonly",
+      "gtag": "readonly"
+    }
+  },
+  "prettier": {
+    "semi": true,
+    "trailingComma": "es5",
+    "singleQuote": true,
+    "printWidth": 100,
+    "tabWidth": 2
+  },
+  "workspaces": {
+    "packages": [
+      "functions"
+    ]
+  }
+}

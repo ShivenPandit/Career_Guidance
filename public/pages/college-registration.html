@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Registration - Career Guidance</title>
+    <meta name="description" content="Register for your selected colleges">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        .registration-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: #f8f9fa;
+            min-height: 100vh;
+        }
+
+        .registration-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+        }
+
+        .registration-header h1 {
+            margin-bottom: 1rem;
+            font-size: 2.5rem;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: center;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: white;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .step.completed {
+            background: #48bb78;
+            color: white;
+        }
+
+        .step.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .step-number {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #ccc;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+
+        .step.completed .step-number {
+            background: white;
+            color: #48bb78;
+        }
+
+        .step.active .step-number {
+            background: white;
+            color: #667eea;
+        }
+
+        .registration-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .main-form {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            height: fit-content;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        .form-section h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .file-upload {
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .file-upload:hover {
+            border-color: #667eea;
+            background: #f0f2ff;
+        }
+
+        .file-upload input {
+            display: none;
+        }
+
+        .file-upload.has-file {
+            border-color: #48bb78;
+            background: #e8f5e8;
+        }
+
+        .selected-colleges {
+            margin-bottom: 2rem;
+        }
+
+        .college-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+        }
+
+        .college-item.registering {
+            background: #e8f5e8;
+            border-left: 4px solid #48bb78;
+        }
+
+        .college-info {
+            flex: 1;
+        }
+
+        .college-info h4 {
+            margin: 0 0 0.25rem 0;
+            color: #333;
+        }
+
+        .college-info p {
+            margin: 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .college-status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-processing {
+            background: #cce5ff;
+            color: #0066cc;
+        }
+
+        .status-completed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .requirements {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .requirements h4 {
+            color: #856404;
+            margin-bottom: 0.5rem;
+        }
+
+        .requirements ul {
+            margin: 0;
+            padding-left: 1.5rem;
+            color: #856404;
+        }
+
+        .aptitude-info {
+            background: #e8f5e8;
+            border: 1px solid #c3e6c3;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .aptitude-info h4 {
+            color: #155724;
+            margin-bottom: 0.5rem;
+        }
+
+        .test-sections {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .test-section {
+            text-align: center;
+            padding: 0.5rem;
+            background: white;
+            border-radius: 5px;
+            border: 1px solid #c3e6c3;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary, .btn-secondary {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .registration-container {
+                padding: 1rem;
+            }
+
+            .registration-header h1 {
+                font-size: 2rem;
+            }
+
+            .registration-content {
+                grid-template-columns: 1fr;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .test-sections {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn-primary, .btn-secondary {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="../index.html">Career<span>Guidance</span></a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="student-details.html">Dashboard</a></li>
+                <li><a href="college-selection.html">College Selection</a></li>
+                <li><a href="aptitude-test.html">Aptitude Test</a></li>
+            </ul>
+            <div class="nav-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="registration-container">
+        <!-- Header -->
+        <div class="registration-header">
+            <h1>College Registration</h1>
+            <p>Complete your application for selected colleges</p>
+            
+            <!-- Progress Steps -->
+            <div class="progress-steps">
+                <div class="step completed">
+                    <span class="step-number">1</span>
+                    <span>Profile Setup</span>
+                </div>
+                <div class="step completed">
+                    <span class="step-number">2</span>
+                    <span>Career Selection</span>
+                </div>
+                <div class="step completed">
+                    <span class="step-number">3</span>
+                    <span>College Selection</span>
+                </div>
+                <div class="step active">
+                    <span class="step-number">4</span>
+                    <span>Registration</span>
+                </div>
+                <div class="step">
+                    <span class="step-number">5</span>
+                    <span>Aptitude Test</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="registration-content">
+            <!-- Main Registration Form -->
+            <div class="main-form">
+                <form id="registration-form">
+                    <!-- Academic Information -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-graduation-cap"></i> Academic Information</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="currentEducation">Current Education Level *</label>
+                                <select id="currentEducation" name="currentEducation" required>
+                                    <option value="">Select Level</option>
+                                    <option value="12th">12th Grade</option>
+                                    <option value="diploma">Diploma</option>
+                                    <option value="undergraduate">Undergraduate</option>
+                                    <option value="postgraduate">Postgraduate</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="stream">Stream/Specialization *</label>
+                                <select id="stream" name="stream" required>
+                                    <option value="">Select Stream</option>
+                                    <option value="science">Science</option>
+                                    <option value="commerce">Commerce</option>
+                                    <option value="arts">Arts</option>
+                                    <option value="engineering">Engineering</option>
+                                    <option value="medical">Medical</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="cgpa">CGPA/Percentage *</label>
+                                <input type="text" id="cgpa" name="cgpa" required placeholder="e.g. 8.5 CGPA or 85%">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="passingYear">Year of Passing *</label>
+                                <select id="passingYear" name="passingYear" required>
+                                    <option value="">Select Year</option>
+                                    <option value="2024">2024</option>
+                                    <option value="2025">2025</option>
+                                    <option value="2026">2026</option>
+                                    <option value="2027">2027</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label for="institution">Current Institution *</label>
+                            <input type="text" id="institution" name="institution" required 
+                                   placeholder="Name of your current school/college">
+                        </div>
+                    </div>
+
+                    <!-- Entrance Exam Information -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-file-alt"></i> Entrance Exam Details</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="entranceExam">Entrance Exam Taken</label>
+                                <select id="entranceExam" name="entranceExam">
+                                    <option value="">Select Exam</option>
+                                    <option value="jee-main">JEE Main</option>
+                                    <option value="jee-advanced">JEE Advanced</option>
+                                    <option value="neet">NEET</option>
+                                    <option value="cat">CAT</option>
+                                    <option value="gate">GATE</option>
+                                    <option value="other">Other</option>
+                                    <option value="not-taken">Not Taken</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="examScore">Score/Rank</label>
+                                <input type="text" id="examScore" name="examScore" 
+                                       placeholder="Enter your score or rank">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="examYear">Exam Year</label>
+                                <select id="examYear" name="examYear">
+                                    <option value="">Select Year</option>
+                                    <option value="2024">2024</option>
+                                    <option value="2023">2023</option>
+                                    <option value="2022">2022</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Document Upload -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-upload"></i> Document Upload</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="marksheet">Academic Marksheet *</label>
+                                <div class="file-upload" onclick="document.getElementById('marksheet').click()">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p>Click to upload marksheet</p>
+                                    <small>PDF, JPG or PNG (Max 5MB)</small>
+                                    <input type="file" id="marksheet" name="marksheet" accept=".pdf,.jpg,.jpeg,.png" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="photo">Passport Size Photo *</label>
+                                <div class="file-upload" onclick="document.getElementById('photo').click()">
+                                    <i class="fas fa-user"></i>
+                                    <p>Click to upload photo</p>
+                                    <small>JPG or PNG (Max 2MB)</small>
+                                    <input type="file" id="photo" name="photo" accept=".jpg,.jpeg,.png" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="idProof">ID Proof</label>
+                                <div class="file-upload" onclick="document.getElementById('idProof').click()">
+                                    <i class="fas fa-id-card"></i>
+                                    <p>Click to upload ID proof</p>
+                                    <small>Aadhar, Passport, etc. (PDF/Image)</small>
+                                    <input type="file" id="idProof" name="idProof" accept=".pdf,.jpg,.jpeg,.png">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Preferences -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-cog"></i> Application Preferences</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="preferredCourse">Preferred Course *</label>
+                                <select id="preferredCourse" name="preferredCourse" required>
+                                    <option value="">Select Course</option>
+                                    <option value="btech">B.Tech</option>
+                                    <option value="mtech">M.Tech</option>
+                                    <option value="bsc">B.Sc</option>
+                                    <option value="msc">M.Sc</option>
+                                    <option value="bba">BBA</option>
+                                    <option value="mba">MBA</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="specialization">Specialization</label>
+                                <input type="text" id="specialization" name="specialization" 
+                                       placeholder="e.g. Computer Science, Mechanical">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label for="statement">Statement of Purpose</label>
+                            <textarea id="statement" name="statement" rows="4"
+                                      placeholder="Why do you want to pursue this course? (Optional)"></textarea>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="sidebar">
+                <!-- Selected Colleges -->
+                <div class="selected-colleges">
+                    <h3><i class="fas fa-university"></i> Selected Colleges</h3>
+                    <div id="colleges-list">
+                        <!-- Colleges will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Registration Requirements -->
+                <div class="requirements">
+                    <h4><i class="fas fa-exclamation-triangle"></i> Requirements</h4>
+                    <ul>
+                        <li>Complete academic information</li>
+                        <li>Upload required documents</li>
+                        <li>Pass eligibility criteria check</li>
+                        <li>Complete aptitude test</li>
+                        <li>Pay application fees (if applicable)</li>
+                    </ul>
+                </div>
+
+                <!-- Aptitude Test Info -->
+                <div class="aptitude-info">
+                    <h4><i class="fas fa-brain"></i> Aptitude Test</h4>
+                    <p>After registration, you'll need to complete an aptitude test consisting of:</p>
+                    
+                    <div class="test-sections">
+                        <div class="test-section">
+                            <strong>Verbal</strong>
+                            <div>25 Questions</div>
+                        </div>
+                        <div class="test-section">
+                            <strong>Quantitative</strong>
+                            <div>25 Questions</div>
+                        </div>
+                        <div class="test-section">
+                            <strong>General Knowledge</strong>
+                            <div>20 Questions</div>
+                        </div>
+                    </div>
+                    
+                    <p style="margin-top: 1rem; font-size: 0.9rem;">
+                        <strong>Duration:</strong> 90 minutes<br>
+                        <strong>Passing Score:</strong> 60%
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <a href="college-selection.html" class="btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Selection
+            </a>
+            <button onclick="submitRegistration()" class="btn-primary">
+                Submit Registration <i class="fas fa-check"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="../js/utils.js"></script>
+    <script>
+        let selectedColleges = JSON.parse(localStorage.getItem('selectedColleges') || '[]');
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserProfile();
+            loadSelectedColleges();
+            setupFileUploads();
+        });
+
+        function loadUserProfile() {
+            // Pre-fill form with saved user data
+            document.getElementById('currentEducation').value = localStorage.getItem('userEducation') || '';
+            document.getElementById('stream').value = localStorage.getItem('userStream') || '';
+            document.getElementById('cgpa').value = localStorage.getItem('cgpa') || '';
+            document.getElementById('institution').value = localStorage.getItem('currentInstitution') || '';
+        }
+
+        function loadSelectedColleges() {
+            const container = document.getElementById('colleges-list');
+            
+            if (selectedColleges.length === 0) {
+                container.innerHTML = `
+                    <div class="college-item">
+                        <div class="college-info">
+                            <h4>No colleges selected</h4>
+                            <p>Go back to select colleges first</p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = selectedColleges.map((college, index) => `
+                <div class="college-item ${index === 0 ? 'registering' : ''}">
+                    <div class="college-info">
+                        <h4>${college.name}</h4>
+                        <p>${college.location}</p>
+                        <p><strong>Fees:</strong> ${college.fees}</p>
+                    </div>
+                    <div class="college-status status-pending">Pending</div>
+                </div>
+            `).join('');
+        }
+
+        function setupFileUploads() {
+            const fileInputs = document.querySelectorAll('input[type="file"]');
+            
+            fileInputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    const container = this.parentNode;
+                    const p = container.querySelector('p');
+                    
+                    if (this.files.length > 0) {
+                        p.textContent = this.files[0].name;
+                        container.classList.add('has-file');
+                    } else {
+                        // Reset text based on input type
+                        if (this.id === 'marksheet') p.textContent = 'Click to upload marksheet';
+                        else if (this.id === 'photo') p.textContent = 'Click to upload photo';
+                        else if (this.id === 'idProof') p.textContent = 'Click to upload ID proof';
+                        container.classList.remove('has-file');
+                    }
+                });
+            });
+        }
+
+        function submitRegistration() {
+            const form = document.getElementById('registration-form');
+            const formData = new FormData(form);
+            
+            // Validate required fields
+            const requiredFields = form.querySelectorAll('[required]');
+            let isValid = true;
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    field.style.borderColor = '#e53e3e';
+                    isValid = false;
+                } else {
+                    field.style.borderColor = '#e1e5e9';
+                }
+            });
+            
+            if (!isValid) {
+                if (typeof Utils !== 'undefined' && Utils.showNotification) {
+                    Utils.showNotification('Please fill all required fields', 'error');
+                }
+                return;
+            }
+            
+            // Store registration data
+            const registrationData = {
+                currentEducation: formData.get('currentEducation'),
+                stream: formData.get('stream'),
+                cgpa: formData.get('cgpa'),
+                passingYear: formData.get('passingYear'),
+                institution: formData.get('institution'),
+                entranceExam: formData.get('entranceExam'),
+                examScore: formData.get('examScore'),
+                examYear: formData.get('examYear'),
+                preferredCourse: formData.get('preferredCourse'),
+                specialization: formData.get('specialization'),
+                statement: formData.get('statement'),
+                selectedColleges: selectedColleges,
+                registrationDate: new Date().toISOString(),
+                status: 'submitted'
+            };
+            
+            try {
+                // Store in localStorage (in production, send to server)
+                localStorage.setItem('registrationData', JSON.stringify(registrationData));
+                localStorage.setItem('registrationComplete', 'true');
+                
+                // Update user profile with new data
+                localStorage.setItem('userEducation', registrationData.currentEducation);
+                localStorage.setItem('userStream', registrationData.stream);
+                localStorage.setItem('cgpa', registrationData.cgpa);
+                localStorage.setItem('currentInstitution', registrationData.institution);
+                
+                if (typeof Utils !== 'undefined' && Utils.showNotification) {
+                    Utils.showNotification('Registration submitted successfully!', 'success');
+                }
+                
+                // Add to recent activities
+                addActivity('Submitted college registration applications');
+                
+                // Redirect to aptitude test
+                setTimeout(() => {
+                    window.location.href = 'aptitude-test.html';
+                }, 2000);
+                
+            } catch (error) {
+                console.error('Registration error:', error);
+                if (typeof Utils !== 'undefined' && Utils.showNotification) {
+                    Utils.showNotification('Registration failed. Please try again.', 'error');
+                }
+            }
+        }
+
+        function addActivity(action) {
+            const activities = JSON.parse(localStorage.getItem('recentActivities') || '[]');
+            activities.unshift({
+                action: action,
+                date: new Date().toLocaleDateString()
+            });
+            localStorage.setItem('recentActivities', JSON.stringify(activities.slice(0, 10)));
+        }
+    </script>
+</body>
+</html>

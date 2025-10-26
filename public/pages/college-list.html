@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College List - Career Guidance</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="../index.html">CareerGuide</a>
+            </div>
+            <div class="nav-menu">
+                <a href="../index.html" class="nav-link">Home</a>
+                <a href="career-selection.html" class="nav-link">Career</a>
+                <a href="college-list.html" class="nav-link active">Colleges</a>
+                <a href="student-login.html" class="nav-link">Profile</a>
+            </div>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="college-search-header">
+                <h1>Find Your Perfect College</h1>
+                <p>Discover colleges that match your preferences and career goals</p>
+            </div>
+
+            <div class="search-filters">
+                <div class="filter-group">
+                    <label for="location-filter">Location</label>
+                    <select id="location-filter" class="filter-select">
+                        <option value="">All Locations</option>
+                        <option value="india">India</option>
+                        <option value="usa">United States</option>
+                        <option value="uk">United Kingdom</option>
+                        <option value="canada">Canada</option>
+                        <option value="australia">Australia</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="program-filter">Program</label>
+                    <select id="program-filter" class="filter-select">
+                        <option value="">All Programs</option>
+                        <option value="engineering">Engineering</option>
+                        <option value="medicine">Medicine</option>
+                        <option value="business">Business</option>
+                        <option value="computer-science">Computer Science</option>
+                        <option value="arts">Arts & Humanities</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="fee-range">Fee Range (Annual)</label>
+                    <div class="fee-range-container">
+                        <input type="range" id="fee-range" min="0" max="100000" value="50000" class="fee-slider">
+                        <div class="fee-display">
+                            <span>$0</span>
+                            <span id="fee-value">$50,000</span>
+                            <span>$100,000+</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <label for="ranking-filter">Ranking</label>
+                    <select id="ranking-filter" class="filter-select">
+                        <option value="">All Rankings</option>
+                        <option value="top-50">Top 50</option>
+                        <option value="top-100">Top 100</option>
+                        <option value="top-200">Top 200</option>
+                    </select>
+                </div>
+
+                <button class="btn btn-primary" id="apply-filters">
+                    <i class="fas fa-search"></i> Apply Filters
+                </button>
+            </div>
+
+            <div class="results-summary">
+                <div class="results-count">
+                    <span id="results-count">0</span> colleges found
+                </div>
+                <div class="sort-options">
+                    <label for="sort-by">Sort by:</label>
+                    <select id="sort-by" class="sort-select">
+                        <option value="ranking">Ranking</option>
+                        <option value="fees">Fees (Low to High)</option>
+                        <option value="fees-desc">Fees (High to Low)</option>
+                        <option value="name">Name (A-Z)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="college-grid" id="college-grid">
+                <!-- College cards will be dynamically loaded here -->
+            </div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Loading colleges...</p>
+            </div>
+
+            <div class="pagination" id="pagination">
+                <button class="btn btn-secondary" id="prev-page" disabled>
+                    <i class="fas fa-chevron-left"></i> Previous
+                </button>
+                <div class="page-info">
+                    <span>Page <span id="current-page">1</span> of <span id="total-pages">1</span></span>
+                </div>
+                <button class="btn btn-secondary" id="next-page">
+                    Next <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- College Card Template -->
+    <template id="college-card-template">
+        <div class="college-card">
+            <div class="college-image">
+                <img src="" alt="College Image" class="college-img">
+                <div class="college-badge">
+                    <span class="ranking">#<span class="rank-number"></span></span>
+                </div>
+            </div>
+            <div class="college-info">
+                <h3 class="college-name"></h3>
+                <div class="college-location">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span class="location-text"></span>
+                </div>
+                <div class="college-programs">
+                    <div class="program-tags"></div>
+                </div>
+                <div class="college-stats">
+                    <div class="stat">
+                        <span class="stat-label">Annual Fees</span>
+                        <span class="stat-value fees"></span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-label">Acceptance Rate</span>
+                        <span class="stat-value acceptance-rate"></span>
+                    </div>
+                </div>
+                <div class="college-actions">
+                    <button class="btn btn-outline view-details" data-college-id="">
+                        <i class="fas fa-info-circle"></i> View Details
+                    </button>
+                    <button class="btn btn-primary apply-now" data-college-id="">
+                        <i class="fas fa-paper-plane"></i> Apply Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    
+    <!-- Application Scripts -->
+    <script src="../js/firebase-config.js"></script>
+    <script src="../js/app.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/college.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize college list page
+            if (typeof CollegeManager !== 'undefined') {
+                const collegeManager = new CollegeManager();
+                collegeManager.init();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Selection - Career Guidance</title>
+    <meta name="description" content="Select your career interests and preferences to get personalized college recommendations">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            background: #f8f9fa;
+            padding-top: 80px;
+        }
+        
+        .career-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .progress-bar {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+        
+        .progress-line {
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #e1e5e9;
+            z-index: 1;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            width: 25%;
+            transition: width 0.3s ease;
+        }
+        
+        .step {
+            background: white;
+            border: 3px solid #e1e5e9;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .step.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-color: #667eea;
+            color: white;
+        }
+        
+        .step.completed {
+            background: #27ae60;
+            border-color: #27ae60;
+            color: white;
+        }
+        
+        .step-label {
+            position: absolute;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.9rem;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        
+        .career-content {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .career-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .career-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .career-header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .career-body {
+            padding: 3rem;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-title h2 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+        
+        .section-title p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .career-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .career-card {
+            background: white;
+            border: 3px solid #e1e5e9;
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .career-card:hover {
+            border-color: #667eea;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(102, 126, 234, 0.2);
+        }
+        
+        .career-card.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+        }
+        
+        .career-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+            color: white;
+        }
+        
+        .career-card h3 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        
+        .career-card p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        
+        .career-details {
+            list-style: none;
+            text-align: left;
+        }
+        
+        .career-details li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.8rem;
+            font-size: 0.9rem;
+            color: #555;
+        }
+        
+        .career-details i {
+            color: #667eea;
+            margin-right: 0.8rem;
+            width: 16px;
+        }
+        
+        .selected-indicator {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #27ae60;
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .career-card.selected .selected-indicator {
+            opacity: 1;
+        }
+        
+        .preferences-section {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 2rem 0;
+        }
+        
+        .preferences-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .preference-group {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 2px solid #e1e5e9;
+        }
+        
+        .preference-group h4 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        
+        .preference-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+        
+        .preference-option {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .preference-option input {
+            margin-right: 0.8rem;
+        }
+        
+        .preference-option label {
+            cursor: pointer;
+            color: #555;
+        }
+        
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e1e5e9;
+        }
+        
+        .btn-back {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+            padding: 12px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-back:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-next {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        
+        .btn-next:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-next:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        @media (max-width: 768px) {
+            .career-container {
+                padding: 1rem;
+            }
+            
+            .career-header {
+                padding: 1.5rem;
+            }
+            
+            .career-header h1 {
+                font-size: 2rem;
+            }
+            
+            .career-body {
+                padding: 2rem;
+            }
+            
+            .career-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .preferences-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .btn-back,
+            .btn-next {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .progress-steps {
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+            
+            .step-label {
+                position: static;
+                transform: none;
+                margin-top: 0.5rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation (same as index.html) -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2><i class="fas fa-graduation-cap"></i> Career Guidance</h2>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="../index.html" class="nav-link">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a href="student-details.html" class="nav-link">Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" id="signout-btn">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="career-container">
+        <!-- Progress Bar -->
+        <div class="progress-bar">
+            <div class="progress-steps">
+                <div class="progress-line">
+                    <div class="progress-fill"></div>
+                </div>
+                <div class="step active">
+                    <i class="fas fa-compass"></i>
+                    <div class="step-label">Career Selection</div>
+                </div>
+                <div class="step">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div class="step-label">Location</div>
+                </div>
+                <div class="step">
+                    <i class="fas fa-university"></i>
+                    <div class="step-label">Colleges</div>
+                </div>
+                <div class="step">
+                    <i class="fas fa-brain"></i>
+                    <div class="step-label">Aptitude Test</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="career-content">
+            <div class="career-header">
+                <h1>Choose Your Career Path</h1>
+                <p>Select the fields that interest you most. This will help us recommend the best colleges and courses for you.</p>
+            </div>
+
+            <div class="career-body">
+                <div class="section-title">
+                    <h2>What field interests you the most?</h2>
+                    <p>You can select multiple fields to explore diverse opportunities</p>
+                </div>
+
+                <div class="career-grid" id="career-grid">
+                    <!-- Career cards will be populated by JavaScript -->
+                </div>
+
+                <div class="preferences-section">
+                    <h3 style="text-align: center; margin-bottom: 2rem; color: #333;">Additional Preferences</h3>
+                    <div class="preferences-grid">
+                        <div class="preference-group">
+                            <h4><i class="fas fa-graduation-cap"></i> Study Level</h4>
+                            <div class="preference-options">
+                                <div class="preference-option">
+                                    <input type="radio" id="undergraduate" name="studyLevel" value="undergraduate" checked>
+                                    <label for="undergraduate">Undergraduate (Bachelor's)</label>
+                                </div>
+                                <div class="preference-option">
+                                    <input type="radio" id="postgraduate" name="studyLevel" value="postgraduate">
+                                    <label for="postgraduate">Postgraduate (Master's)</label>
+                                </div>
+                                <div class="preference-option">
+                                    <input type="radio" id="doctorate" name="studyLevel" value="doctorate">
+                                    <label for="doctorate">Doctorate (PhD)</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="preference-group">
+                            <h4><i class="fas fa-clock"></i> Study Duration</h4>
+                            <div class="preference-options">
+                                <div class="preference-option">
+                                    <input type="radio" id="duration-short" name="duration" value="1-2 years">
+                                    <label for="duration-short">1-2 years</label>
+                                </div>
+                                <div class="preference-option">
+                                    <input type="radio" id="duration-medium" name="duration" value="3-4 years" checked>
+                                    <label for="duration-medium">3-4 years</label>
+                                </div>
+                                <div class="preference-option">
+                                    <input type="radio" id="duration-long" name="duration" value="5+ years">
+                                    <label for="duration-long">5+ years</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="preference-group">
+                            <h4><i class="fas fa-briefcase"></i> Career Goals</h4>
+                            <div class="preference-options">
+                                <div class="preference-option">
+                                    <input type="checkbox" id="job-oriented" name="goals" value="job-oriented">
+                                    <label for="job-oriented">Job-oriented courses</label>
+                                </div>
+                                <div class="preference-option">
+                                    <input type="checkbox" id="research" name="goals" value="research">
+                                    <label for="research">Research opportunities</label>
+                                </div>
+                                <div class="preference-option">
+                                    <input type="checkbox" id="entrepreneurship" name="goals" value="entrepreneurship">
+                                    <label for="entrepreneurship">Entrepreneurship</label>
+                                </div>
+                                <div class="preference-option">
+                                    <input type="checkbox" id="higher-studies" name="goals" value="higher-studies">
+                                    <label for="higher-studies">Higher studies</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="preference-group">
+                            <h4><i class="fas fa-star"></i> Priority Factors</h4>
+                            <div class="preference-options">
+                                <div class="preference-option">
+                                    <input type="checkbox" id="ranking" name="priorities" value="ranking" checked>
+                                    <label for="ranking">College ranking</label>
+                                </div>
+                                <div class="preference-option">
+                                    <input type="checkbox" id="placement" name="priorities" value="placement" checked>
+                                    <label for="placement">Placement records</label>
+                                </div>
+                                <div class="preference-option">
+                                    <input type="checkbox" id="fees" name="priorities" value="fees">
+                                    <label for="fees">Affordable fees</label>
+                                </div>
+                                <div class="preference-option">
+                                    <input type="checkbox" id="faculty" name="priorities" value="faculty">
+                                    <label for="faculty">Faculty quality</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <a href="student-details.html" class="btn-back">
+                        <i class="fas fa-arrow-left"></i> Back to Profile
+                    </a>
+                    <button type="button" class="btn-next" id="next-btn" disabled>
+                        Next: Choose Location <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Spinner -->
+    <div id="loading-spinner" class="loading-spinner hidden">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script src="../js/app.js"></script>
+    <script src="../js/auth.js"></script>
+    <script>
+        // Career fields data
+        const careerFields = [
+            {
+                id: 'engineering',
+                name: 'Engineering & Technology',
+                icon: 'fas fa-cogs',
+                description: 'Build, design, and innovate with cutting-edge technology',
+                details: [
+                    'High demand in industry',
+                    'Diverse specializations',
+                    'Good salary prospects',
+                    'Innovation opportunities'
+                ]
+            },
+            {
+                id: 'medical',
+                name: 'Medical & Healthcare',
+                icon: 'fas fa-heartbeat',
+                description: 'Heal, care, and make a difference in people\'s lives',
+                details: [
+                    'Noble profession',
+                    'Job security',
+                    'Continuous learning',
+                    'Social impact'
+                ]
+            },
+            {
+                id: 'business',
+                name: 'Business & Management',
+                icon: 'fas fa-chart-line',
+                description: 'Lead, manage, and drive business growth',
+                details: [
+                    'Leadership roles',
+                    'Entrepreneurship',
+                    'Global opportunities',
+                    'Strategic thinking'
+                ]
+            },
+            {
+                id: 'computer-science',
+                name: 'Computer Science & IT',
+                icon: 'fas fa-laptop-code',
+                description: 'Code, develop, and shape the digital future',
+                details: [
+                    'High growth industry',
+                    'Remote work options',
+                    'Constant innovation',
+                    'Excellent packages'
+                ]
+            },
+            {
+                id: 'arts',
+                name: 'Arts & Humanities',
+                icon: 'fas fa-palette',
+                description: 'Express creativity and understand human culture',
+                details: [
+                    'Creative expression',
+                    'Cultural understanding',
+                    'Diverse career paths',
+                    'Personal fulfillment'
+                ]
+            },
+            {
+                id: 'science',
+                name: 'Pure Sciences',
+                icon: 'fas fa-flask',
+                description: 'Discover, research, and advance scientific knowledge',
+                details: [
+                    'Research opportunities',
+                    'Academic careers',
+                    'Scientific discovery',
+                    'Knowledge advancement'
+                ]
+            },
+            {
+                id: 'law',
+                name: 'Law & Legal Studies',
+                icon: 'fas fa-balance-scale',
+                description: 'Uphold justice and protect rights',
+                details: [
+                    'Social justice',
+                    'Intellectual challenges',
+                    'Prestigious career',
+                    'Advocacy opportunities'
+                ]
+            },
+            {
+                id: 'education',
+                name: 'Education & Teaching',
+                icon: 'fas fa-chalkboard-teacher',
+                description: 'Inspire, educate, and shape future generations',
+                details: [
+                    'Make a difference',
+                    'Continuous learning',
+                    'Job stability',
+                    'Fulfilling career'
+                ]
+            }
+        ];
+
+        let selectedCareers = [];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check authentication
+            if (!authManager.requireAuth()) {
+                return;
+            }
+
+            // Render career fields
+            renderCareerFields();
+
+            // Setup event listeners
+            setupEventListeners();
+        });
+
+        function renderCareerFields() {
+            const careerGrid = document.getElementById('career-grid');
+            
+            careerFields.forEach(field => {
+                const careerCard = document.createElement('div');
+                careerCard.className = 'career-card';
+                careerCard.dataset.careerId = field.id;
+                
+                careerCard.innerHTML = `
+                    <div class="selected-indicator">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="career-icon">
+                        <i class="${field.icon}"></i>
+                    </div>
+                    <h3>${field.name}</h3>
+                    <p>${field.description}</p>
+                    <ul class="career-details">
+                        ${field.details.map(detail => `
+                            <li><i class="fas fa-check"></i> ${detail}</li>
+                        `).join('')}
+                    </ul>
+                `;
+                
+                careerCard.addEventListener('click', () => toggleCareerSelection(field.id));
+                careerGrid.appendChild(careerCard);
+            });
+        }
+
+        function toggleCareerSelection(careerId) {
+            const careerCard = document.querySelector(`[data-career-id="${careerId}"]`);
+            
+            if (selectedCareers.includes(careerId)) {
+                // Remove from selection
+                selectedCareers = selectedCareers.filter(id => id !== careerId);
+                careerCard.classList.remove('selected');
+            } else {
+                // Add to selection
+                selectedCareers.push(careerId);
+                careerCard.classList.add('selected');
+            }
+            
+            updateNextButton();
+            Logger.info('Career selection updated', { selectedCareers });
+        }
+
+        function updateNextButton() {
+            const nextBtn = document.getElementById('next-btn');
+            nextBtn.disabled = selectedCareers.length === 0;
+        }
+
+        function setupEventListeners() {
+            const nextBtn = document.getElementById('next-btn');
+            nextBtn.addEventListener('click', handleNext);
+        }
+
+        async function handleNext() {
+            try {
+                showLoading(true);
+                
+                // Collect form data
+                const preferences = collectPreferences();
+                
+                // Save career selection and preferences
+                await saveCareerSelection(preferences);
+                
+                // Navigate to location selection
+                window.location.href = 'location-selection.html';
+                
+            } catch (error) {
+                Logger.error('Failed to save career selection', error);
+                showNotification('Failed to save your preferences. Please try again.', 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function collectPreferences() {
+            const studyLevel = document.querySelector('input[name="studyLevel"]:checked').value;
+            const duration = document.querySelector('input[name="duration"]:checked').value;
+            
+            const goals = Array.from(document.querySelectorAll('input[name="goals"]:checked'))
+                .map(input => input.value);
+            
+            const priorities = Array.from(document.querySelectorAll('input[name="priorities"]:checked'))
+                .map(input => input.value);
+
+            return {
+                selectedCareers,
+                studyLevel,
+                duration,
+                goals,
+                priorities,
+                timestamp: new Date().toISOString()
+            };
+        }
+
+        async function saveCareerSelection(preferences) {
+            const user = authManager.getCurrentUser();
+            if (!user) {
+                throw new Error('User not authenticated');
+            }
+
+            Logger.info('Saving career selection', preferences);
+
+            await db.collection('users').doc(user.uid).update({
+                careerPreferences: preferences,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+
+            Logger.info('Career selection saved successfully');
+        }
+    </script>
+</body>
+</html>

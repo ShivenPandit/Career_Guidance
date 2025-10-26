@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Selection - Career Guidance</title>
+    <meta name="description" content="Select and compare colleges based on your preferences">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        .selection-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: #f8f9fa;
+            min-height: 100vh;
+        }
+
+        .selection-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+        }
+
+        .selection-header h1 {
+            margin-bottom: 1rem;
+            font-size: 2.5rem;
+        }
+
+        .selected-colleges {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .selected-colleges h2 {
+            color: #667eea;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .college-comparison {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .college-card {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .college-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .college-card.selected {
+            border: 2px solid #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .college-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .college-logo {
+            width: 60px;
+            height: 60px;
+            background: #f0f2ff;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #667eea;
+        }
+
+        .college-card.selected .college-logo {
+            background: white;
+            color: #667eea;
+        }
+
+        .college-info h3 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.3rem;
+        }
+
+        .college-info p {
+            margin: 0;
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        .college-details {
+            margin: 1rem 0;
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .college-card.selected .detail-row {
+            border-bottom-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            font-weight: 500;
+            opacity: 0.8;
+        }
+
+        .detail-value {
+            font-weight: 600;
+        }
+
+        .college-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-select {
+            background: #667eea;
+            color: white;
+            flex: 1;
+        }
+
+        .college-card.selected .btn-select {
+            background: white;
+            color: #667eea;
+        }
+
+        .btn-details {
+            background: transparent;
+            border: 2px solid #667eea;
+            color: #667eea;
+        }
+
+        .college-card.selected .btn-details {
+            border-color: white;
+            color: white;
+        }
+
+        .btn-small:hover {
+            transform: translateY(-2px);
+        }
+
+        .comparison-table {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow-x: auto;
+        }
+
+        .comparison-table table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+
+        .comparison-table th,
+        .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .comparison-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary, .btn-secondary {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .filter-section {
+            background: white;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            align-items: end;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            color: #ccc;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .selection-container {
+                padding: 1rem;
+            }
+
+            .selection-header h1 {
+                font-size: 2rem;
+            }
+
+            .college-comparison {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn-primary, .btn-secondary {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="../index.html">Career<span>Guidance</span></a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="student-details.html">Dashboard</a></li>
+                <li><a href="career-selection.html">Career Selection</a></li>
+                <li><a href="college-list.html">Browse Colleges</a></li>
+                <li><a href="aptitude-test.html">Aptitude Test</a></li>
+            </ul>
+            <div class="nav-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="selection-container">
+        <!-- Header -->
+        <div class="selection-header">
+            <h1>College Selection</h1>
+            <p>Compare and select your preferred colleges for admission</p>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <h3><i class="fas fa-filter"></i> Filter Options</h3>
+            <div class="filter-grid">
+                <div class="filter-group">
+                    <label for="location-filter">Location</label>
+                    <select id="location-filter">
+                        <option value="">All Locations</option>
+                        <option value="india">India</option>
+                        <option value="abroad">Abroad</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="fee-filter">Fee Range</label>
+                    <select id="fee-filter">
+                        <option value="">All Fees</option>
+                        <option value="low">Under 5 Lakhs</option>
+                        <option value="medium">5-15 Lakhs</option>
+                        <option value="high">Above 15 Lakhs</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="ranking-filter">Ranking</label>
+                    <select id="ranking-filter">
+                        <option value="">All Rankings</option>
+                        <option value="top10">Top 10</option>
+                        <option value="top50">Top 50</option>
+                        <option value="top100">Top 100</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <button onclick="applyFilters()" class="btn-primary" style="padding: 0.5rem 1rem;">Apply Filters</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Selected Colleges Section -->
+        <div class="selected-colleges">
+            <h2><i class="fas fa-heart"></i> Your Selected Colleges (<span id="selected-count">0</span>/5)</h2>
+            <div id="selected-list" class="college-comparison">
+                <div class="empty-state" id="empty-selection">
+                    <i class="fas fa-university"></i>
+                    <h3>No colleges selected yet</h3>
+                    <p>Browse colleges below and select up to 5 for comparison</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Available Colleges -->
+        <div class="selected-colleges">
+            <h2><i class="fas fa-search"></i> Available Colleges</h2>
+            <div id="available-colleges" class="college-comparison">
+                <!-- Colleges will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Comparison Table -->
+        <div id="comparison-section" class="comparison-table" style="display: none;">
+            <h2><i class="fas fa-chart-bar"></i> College Comparison</h2>
+            <table id="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Criteria</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Tuition Fees</td>
+                    </tr>
+                    <tr>
+                        <td>Ranking</td>
+                    </tr>
+                    <tr>
+                        <td>Location</td>
+                    </tr>
+                    <tr>
+                        <td>Placement Rate</td>
+                    </tr>
+                    <tr>
+                        <td>Average Package</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <a href="college-list.html" class="btn-secondary">
+                <i class="fas fa-arrow-left"></i> Browse More Colleges
+            </a>
+            <button id="proceed-btn" class="btn-primary" onclick="proceedToRegistration()" disabled>
+                Proceed to Registration <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="../js/utils.js"></script>
+    <script src="../js/demo-data.js"></script>
+    <script>
+        let selectedColleges = JSON.parse(localStorage.getItem('selectedColleges') || '[]');
+        let availableColleges = [];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadColleges();
+            updateSelectedList();
+            updateProceedButton();
+        });
+
+        function loadColleges() {
+            // Use demo data
+            if (typeof demoColleges !== 'undefined') {
+                availableColleges = demoColleges.map(college => ({
+                    ...college,
+                    id: college.name.toLowerCase().replace(/\s+/g, '-')
+                }));
+            } else {
+                // Fallback data
+                availableColleges = [
+                    {
+                        id: 'iit-delhi',
+                        name: 'IIT Delhi',
+                        location: 'Delhi, India',
+                        fees: '2.5 Lakhs/year',
+                        ranking: 2,
+                        programs: ['Engineering', 'Technology'],
+                        placementRate: 95,
+                        averagePackage: '18 LPA'
+                    },
+                    {
+                        id: 'mit',
+                        name: 'MIT',
+                        location: 'Boston, USA',
+                        fees: '50 Lakhs/year',
+                        ranking: 1,
+                        programs: ['Engineering', 'Science'],
+                        placementRate: 98,
+                        averagePackage: '80 LPA'
+                    },
+                    // Add more colleges as needed
+                ];
+            }
+
+            displayAvailableColleges();
+        }
+
+        function displayAvailableColleges() {
+            const container = document.getElementById('available-colleges');
+            
+            if (availableColleges.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-university"></i>
+                        <h3>No colleges found</h3>
+                        <p>Try adjusting your filters</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = availableColleges.map(college => `
+                <div class="college-card" id="college-${college.id}">
+                    <div class="college-header">
+                        <div class="college-logo">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <div class="college-info">
+                            <h3>${college.name}</h3>
+                            <p>${college.location}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="college-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Fees:</span>
+                            <span class="detail-value">${college.fees}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Ranking:</span>
+                            <span class="detail-value">#${college.ranking}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Placement:</span>
+                            <span class="detail-value">${college.placementRate}%</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Avg Package:</span>
+                            <span class="detail-value">${college.averagePackage}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="college-actions">
+                        <button class="btn-small btn-select" onclick="toggleSelection('${college.id}')">
+                            ${isSelected(college.id) ? 'Remove' : 'Select'}
+                        </button>
+                        <button class="btn-small btn-details" onclick="viewDetails('${college.id}')">
+                            Details
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            // Update visual state for selected colleges
+            selectedColleges.forEach(college => {
+                const card = document.getElementById(`college-${college.id}`);
+                if (card) {
+                    card.classList.add('selected');
+                }
+            });
+        }
+
+        function isSelected(collegeId) {
+            return selectedColleges.some(college => college.id === collegeId);
+        }
+
+        function toggleSelection(collegeId) {
+            const college = availableColleges.find(c => c.id === collegeId);
+            const card = document.getElementById(`college-${collegeId}`);
+            
+            if (isSelected(collegeId)) {
+                // Remove from selection
+                selectedColleges = selectedColleges.filter(c => c.id !== collegeId);
+                card.classList.remove('selected');
+                card.querySelector('.btn-select').textContent = 'Select';
+                
+                if (typeof Utils !== 'undefined' && Utils.showNotification) {
+                    Utils.showNotification(`${college.name} removed from selection`, 'info');
+                }
+            } else {
+                // Add to selection (max 5)
+                if (selectedColleges.length >= 5) {
+                    if (typeof Utils !== 'undefined' && Utils.showNotification) {
+                        Utils.showNotification('Maximum 5 colleges can be selected', 'warning');
+                    }
+                    return;
+                }
+                
+                selectedColleges.push(college);
+                card.classList.add('selected');
+                card.querySelector('.btn-select').textContent = 'Remove';
+                
+                if (typeof Utils !== 'undefined' && Utils.showNotification) {
+                    Utils.showNotification(`${college.name} added to selection`, 'success');
+                }
+            }
+            
+            // Update localStorage and UI
+            localStorage.setItem('selectedColleges', JSON.stringify(selectedColleges));
+            updateSelectedList();
+            updateComparison();
+            updateProceedButton();
+            addActivity(`${isSelected(collegeId) ? 'Selected' : 'Removed'} ${college.name}`);
+        }
+
+        function updateSelectedList() {
+            const container = document.getElementById('selected-list');
+            const countElement = document.getElementById('selected-count');
+            const emptyState = document.getElementById('empty-selection');
+            
+            countElement.textContent = selectedColleges.length;
+            
+            if (selectedColleges.length === 0) {
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            container.innerHTML = selectedColleges.map(college => `
+                <div class="college-card selected">
+                    <div class="college-header">
+                        <div class="college-logo">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <div class="college-info">
+                            <h3>${college.name}</h3>
+                            <p>${college.location}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="college-details">
+                        <div class="detail-row">
+                            <span class="detail-label">Fees:</span>
+                            <span class="detail-value">${college.fees}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Ranking:</span>
+                            <span class="detail-value">#${college.ranking}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="college-actions">
+                        <button class="btn-small btn-select" onclick="toggleSelection('${college.id}')">
+                            Remove
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateComparison() {
+            const section = document.getElementById('comparison-section');
+            const table = document.getElementById('comparison-table');
+            
+            if (selectedColleges.length < 2) {
+                section.style.display = 'none';
+                return;
+            }
+            
+            section.style.display = 'block';
+            
+            // Update table header
+            const header = table.querySelector('thead tr');
+            header.innerHTML = '<th>Criteria</th>' + 
+                selectedColleges.map(college => `<th>${college.name}</th>`).join('');
+            
+            // Update table body
+            const tbody = table.querySelector('tbody');
+            tbody.innerHTML = `
+                <tr>
+                    <td><strong>Tuition Fees</strong></td>
+                    ${selectedColleges.map(college => `<td>${college.fees}</td>`).join('')}
+                </tr>
+                <tr>
+                    <td><strong>Ranking</strong></td>
+                    ${selectedColleges.map(college => `<td>#${college.ranking}</td>`).join('')}
+                </tr>
+                <tr>
+                    <td><strong>Location</strong></td>
+                    ${selectedColleges.map(college => `<td>${college.location}</td>`).join('')}
+                </tr>
+                <tr>
+                    <td><strong>Placement Rate</strong></td>
+                    ${selectedColleges.map(college => `<td>${college.placementRate}%</td>`).join('')}
+                </tr>
+                <tr>
+                    <td><strong>Average Package</strong></td>
+                    ${selectedColleges.map(college => `<td>${college.averagePackage}</td>`).join('')}
+                </tr>
+            `;
+        }
+
+        function updateProceedButton() {
+            const button = document.getElementById('proceed-btn');
+            button.disabled = selectedColleges.length === 0;
+        }
+
+        function applyFilters() {
+            const locationFilter = document.getElementById('location-filter').value;
+            const feeFilter = document.getElementById('fee-filter').value;
+            const rankingFilter = document.getElementById('ranking-filter').value;
+            
+            // Apply filters (simplified for demo)
+            let filtered = availableColleges.filter(college => {
+                let matches = true;
+                
+                if (locationFilter) {
+                    if (locationFilter === 'india' && !college.location.includes('India')) {
+                        matches = false;
+                    }
+                    if (locationFilter === 'abroad' && college.location.includes('India')) {
+                        matches = false;
+                    }
+                }
+                
+                return matches;
+            });
+            
+            availableColleges = filtered;
+            displayAvailableColleges();
+            
+            if (typeof Utils !== 'undefined' && Utils.showNotification) {
+                Utils.showNotification(`Found ${filtered.length} colleges matching your criteria`, 'info');
+            }
+        }
+
+        function viewDetails(collegeId) {
+            const college = availableColleges.find(c => c.id === collegeId);
+            // In a real app, this would open a detailed view
+            if (typeof Utils !== 'undefined' && Utils.showNotification) {
+                Utils.showNotification(`Viewing details for ${college.name}`, 'info');
+            }
+        }
+
+        function proceedToRegistration() {
+            if (selectedColleges.length === 0) {
+                if (typeof Utils !== 'undefined' && Utils.showNotification) {
+                    Utils.showNotification('Please select at least one college', 'error');
+                }
+                return;
+            }
+            
+            // Store final selection
+            localStorage.setItem('collegeSelectionComplete', 'true');
+            addActivity(`Finalized selection of ${selectedColleges.length} colleges`);
+            
+            // Redirect to registration
+            window.location.href = 'college-registration.html';
+        }
+
+        function addActivity(action) {
+            const activities = JSON.parse(localStorage.getItem('recentActivities') || '[]');
+            activities.unshift({
+                action: action,
+                date: new Date().toLocaleDateString()
+            });
+            localStorage.setItem('recentActivities', JSON.stringify(activities.slice(0, 10)));
+        }
+    </script>
+</body>
+</html>

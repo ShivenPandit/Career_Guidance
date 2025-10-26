@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Career Guidance</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .dashboard {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .header p {
+            color: #666;
+        }
+        .nav-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .nav-card {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            text-decoration: none;
+            color: #333;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 2px solid transparent;
+        }
+        .nav-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            border-color: #667eea;
+            text-decoration: none;
+        }
+        .nav-card i {
+            font-size: 3rem;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        .nav-card h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        .nav-card p {
+            margin: 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        .auth-status {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            float: right;
+        }
+        .logout-btn:hover {
+            background: #c82333;
+        }
+        .welcome-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard">
+        <button class="logout-btn" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+        
+        <div class="header">
+            <h1>🎓 Career Guidance Dashboard</h1>
+            <p>Your personalized career guidance portal</p>
+        </div>
+        
+        <div class="auth-status">
+            ✅ Successfully logged in! Welcome to your dashboard.
+        </div>
+        
+        <div class="welcome-box">
+            <h2>Welcome, <span id="user-name">Student</span>!</h2>
+            <p>Start your journey to finding the perfect college and career path</p>
+        </div>
+        
+        <div class="nav-grid">
+            <a href="career-selection.html" class="nav-card">
+                <i class="fas fa-compass"></i>
+                <h3>Career Selection</h3>
+                <p>Discover career paths that match your interests and skills</p>
+            </a>
+            
+            <a href="location-selection.html" class="nav-card">
+                <i class="fas fa-map-marker-alt"></i>
+                <h3>Location Preference</h3>
+                <p>Choose your preferred study locations and regions</p>
+            </a>
+            
+            <a href="college-list.html" class="nav-card">
+                <i class="fas fa-university"></i>
+                <h3>Browse Colleges</h3>
+                <p>Explore colleges and universities that fit your criteria</p>
+            </a>
+            
+            <a href="aptitude-test.html" class="nav-card">
+                <i class="fas fa-brain"></i>
+                <h3>Aptitude Test</h3>
+                <p>Take comprehensive tests to assess your abilities</p>
+            </a>
+            
+            <a href="college-registration.html" class="nav-card">
+                <i class="fas fa-edit"></i>
+                <h3>College Registration</h3>
+                <p>Register for your selected colleges and programs</p>
+            </a>
+            
+            <a href="../index.html" class="nav-card">
+                <i class="fas fa-home"></i>
+                <h3>Home</h3>
+                <p>Return to the main website</p>
+            </a>
+        </div>
+        
+        <div style="text-align: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee;">
+            <p style="color: #666; margin: 0;">
+                <strong>Debug Info:</strong> 
+                <span id="auth-info"></span>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Load user information
+        function loadUserInfo() {
+            // Get user name from various sources
+            let userName = 'Student';
+            
+            const storedName = localStorage.getItem('userName');
+            if (storedName) {
+                userName = storedName;
+            }
+            
+            const currentUser = localStorage.getItem('career_guidance_current_user');
+            if (currentUser) {
+                try {
+                    const userData = JSON.parse(currentUser);
+                    userName = userData.name || userName;
+                } catch (e) {
+                    console.warn('Could not parse user data');
+                }
+            }
+            
+            document.getElementById('user-name').textContent = userName;
+            
+            // Show authentication info
+            const authInfo = document.getElementById('auth-info');
+            const authKeys = [
+                localStorage.getItem('userSignedIn'),
+                localStorage.getItem('career_guidance_logged_in'),
+                localStorage.getItem('career_guidance_current_user') ? 'Has user data' : null
+            ].filter(Boolean);
+            
+            authInfo.textContent = authKeys.length > 0 ? `Auth: ${authKeys.join(', ')}` : 'No auth data found';
+        }
+        
+        function logout() {
+            // Clear authentication data
+            localStorage.removeItem('userSignedIn');
+            localStorage.removeItem('career_guidance_logged_in');
+            localStorage.removeItem('career_guidance_current_user');
+            localStorage.removeItem('userName');
+            localStorage.removeItem('userEmail');
+            
+            alert('Logged out successfully!');
+            window.location.href = '../index.html';
+        }
+        
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🎯 Dashboard loaded successfully!');
+            loadUserInfo();
+        });
+    </script>
+</body>
+</html>

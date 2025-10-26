@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Location Selection - Career Guidance</title>
+    <meta name="description" content="Choose your preferred study location - India or Abroad">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        .location-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: #f8f9fa;
+            min-height: 100vh;
+        }
+
+        .location-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+        }
+
+        .location-header h1 {
+            margin-bottom: 1rem;
+            font-size: 2.5rem;
+        }
+
+        .location-header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .location-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .location-card {
+            background: white;
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .location-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .location-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .location-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .location-card.selected {
+            border: 2px solid #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .location-card.selected::before {
+            transform: scaleX(1);
+        }
+
+        .location-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .location-card.selected .location-icon {
+            background: white;
+            color: #667eea;
+        }
+
+        .location-card h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .location-card.selected h2 {
+            color: white;
+        }
+
+        .location-card p {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .location-card.selected p {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .features-list {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+        }
+
+        .features-list li {
+            padding: 0.5rem 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #666;
+        }
+
+        .location-card.selected .features-list li {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .features-list li i {
+            color: #48bb78;
+            width: 16px;
+        }
+
+        .location-card.selected .features-list li i {
+            color: white;
+        }
+
+        .additional-info {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .info-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .info-card h3 {
+            color: #333;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary, .btn-secondary {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .progress-bar {
+            background: #e9ecef;
+            height: 8px;
+            border-radius: 4px;
+            margin: 2rem 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100%;
+            width: 60%;
+            transition: width 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .location-container {
+                padding: 1rem;
+            }
+
+            .location-header h1 {
+                font-size: 2rem;
+            }
+
+            .location-options {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn-primary, .btn-secondary {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="../index.html">Career<span>Guidance</span></a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="student-details.html">Dashboard</a></li>
+                <li><a href="career-selection.html">Career Selection</a></li>
+                <li><a href="college-list.html">Colleges</a></li>
+                <li><a href="aptitude-test.html">Aptitude Test</a></li>
+            </ul>
+            <div class="nav-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="location-container">
+        <!-- Header -->
+        <div class="location-header">
+            <h1>Choose Your Study Location</h1>
+            <p>Select whether you want to study in India or explore opportunities abroad</p>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+            <small>Step 3 of 5 - Location Selection</small>
+        </div>
+
+        <!-- Location Options -->
+        <div class="location-options">
+            <!-- India Option -->
+            <div class="location-card" data-location="india" onclick="selectLocation('india')">
+                <div class="location-icon">
+                    <i class="fas fa-flag"></i>
+                </div>
+                <h2>Study in India</h2>
+                <p>Explore excellent educational opportunities within India with world-class institutions and affordable education.</p>
+                
+                <ul class="features-list">
+                    <li><i class="fas fa-check"></i> Lower tuition fees and living costs</li>
+                    <li><i class="fas fa-check"></i> No visa requirements</li>
+                    <li><i class="fas fa-check"></i> Family support and familiar culture</li>
+                    <li><i class="fas fa-check"></i> Strong industry connections</li>
+                    <li><i class="fas fa-check"></i> Growing startup ecosystem</li>
+                    <li><i class="fas fa-check"></i> Diverse course options</li>
+                </ul>
+            </div>
+
+            <!-- Abroad Option -->
+            <div class="location-card" data-location="abroad" onclick="selectLocation('abroad')">
+                <div class="location-icon">
+                    <i class="fas fa-globe"></i>
+                </div>
+                <h2>Study Abroad</h2>
+                <p>Experience international education with global exposure, advanced research facilities, and diverse cultures.</p>
+                
+                <ul class="features-list">
+                    <li><i class="fas fa-check"></i> World-class universities</li>
+                    <li><i class="fas fa-check"></i> International exposure</li>
+                    <li><i class="fas fa-check"></i> Advanced research opportunities</li>
+                    <li><i class="fas fa-check"></i> Global career prospects</li>
+                    <li><i class="fas fa-check"></i> Cultural diversity</li>
+                    <li><i class="fas fa-check"></i> Work while studying options</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Additional Information -->
+        <div class="additional-info">
+            <h2><i class="fas fa-info-circle"></i> Important Considerations</h2>
+            <div class="info-grid">
+                <div class="info-card">
+                    <h3><i class="fas fa-rupee-sign"></i> Budget Planning</h3>
+                    <p>Consider tuition fees, living expenses, travel costs, and other financial requirements. India generally offers more affordable options while studying abroad may require higher investment.</p>
+                </div>
+                <div class="info-card">
+                    <h3><i class="fas fa-clock"></i> Timeline</h3>
+                    <p>Indian admissions typically have shorter lead times, while international applications may require 6-12 months advance planning for visa processing and documentation.</p>
+                </div>
+                <div class="info-card">
+                    <h3><i class="fas fa-language"></i> Language Requirements</h3>
+                    <p>Most Indian institutions use English or local languages. International universities may require IELTS/TOEFL scores for English proficiency or other language certifications.</p>
+                </div>
+                <div class="info-card">
+                    <h3><i class="fas fa-graduation-cap"></i> Recognition</h3>
+                    <p>Ensure the chosen institution and program are recognized by relevant authorities. Both Indian and international degrees can offer excellent career prospects.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <a href="career-selection.html" class="btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to Career Selection
+            </a>
+            <button id="continue-btn" class="btn-primary" disabled onclick="continueToColleges()">
+                Continue to College List <i class="fas fa-arrow-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Notification for demo -->
+    <div id="notification" class="notification" style="display: none;"></div>
+
+    <!-- JavaScript -->
+    <script src="../js/utils.js"></script>
+    <script src="../js/demo-data.js"></script>
+    <script>
+        let selectedLocation = localStorage.getItem('locationPreference') || '';
+
+        // Load saved selection on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            if (selectedLocation) {
+                selectLocation(selectedLocation);
+            }
+        });
+
+        function selectLocation(location) {
+            // Remove previous selection
+            document.querySelectorAll('.location-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+
+            // Add selection to clicked card
+            const selectedCard = document.querySelector(`[data-location="${location}"]`);
+            selectedCard.classList.add('selected');
+
+            // Store selection
+            selectedLocation = location;
+            localStorage.setItem('locationPreference', location);
+
+            // Enable continue button
+            document.getElementById('continue-btn').disabled = false;
+
+            // Show notification
+            showNotification(`Great choice! You've selected to study ${location === 'india' ? 'in India' : 'abroad'}.`, 'success');
+
+            // Add to recent activities
+            addActivity(`Selected study location: ${location === 'india' ? 'India' : 'Abroad'}`);
+        }
+
+        function continueToColleges() {
+            if (!selectedLocation) {
+                showNotification('Please select a location preference first.', 'error');
+                return;
+            }
+
+            // Store completion status
+            localStorage.setItem('locationSelectionComplete', 'true');
+            
+            // Redirect to college list with location filter
+            window.location.href = `college-list.html?location=${selectedLocation}`;
+        }
+
+        function showNotification(message, type = 'info') {
+            if (typeof Utils !== 'undefined' && Utils.showNotification) {
+                Utils.showNotification(message, type);
+            } else {
+                // Fallback notification
+                const notification = document.getElementById('notification');
+                notification.textContent = message;
+                notification.className = `notification notification-${type}`;
+                notification.style.display = 'block';
+                
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        function addActivity(action) {
+            const activities = JSON.parse(localStorage.getItem('recentActivities') || '[]');
+            activities.unshift({
+                action: action,
+                date: new Date().toLocaleDateString()
+            });
+            localStorage.setItem('recentActivities', JSON.stringify(activities.slice(0, 10)));
+        }
+
+        // Add notification styles
+        const notificationStyles = `
+            .notification {
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 25px;
+                border-radius: 5px;
+                color: white;
+                font-weight: 500;
+                z-index: 10000;
+                transform: translateX(400px);
+                transition: transform 0.3s ease;
+                max-width: 300px;
+                word-wrap: break-word;
+            }
+
+            .notification.show,
+            .notification {
+                transform: translateX(0);
+            }
+
+            .notification-info {
+                background-color: #667eea;
+            }
+
+            .notification-success {
+                background-color: #48bb78;
+            }
+
+            .notification-warning {
+                background-color: #ed8936;
+            }
+
+            .notification-error {
+                background-color: #f56565;
+            }
+        `;
+
+        const styleSheet = document.createElement("style");
+        styleSheet.textContent = notificationStyles;
+        document.head.appendChild(styleSheet);
+    </script>
+</body>
+</html>

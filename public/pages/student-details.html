@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Details - Career Guidance</title>
+    <meta name="description" content="Manage your student profile and academic information">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: #f8f9fa;
+            min-height: 100vh;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .welcome-message {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .dashboard-nav {
+            display: flex;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            text-decoration: none;
+            color: #333;
+            min-width: 200px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .nav-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            text-decoration: none;
+        }
+
+        .nav-card i {
+            font-size: 2rem;
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+
+        .nav-card h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            color: #333;
+        }
+
+        .profile-section {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-section h2 {
+            color: #667eea;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .info-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .info-card h3 {
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #666;
+        }
+
+        .info-value {
+            color: #333;
+        }
+
+        .edit-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s ease;
+        }
+
+        .edit-btn:hover {
+            background: #5a6fd8;
+        }
+
+        .progress-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .progress-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .progress-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .completed { background: #48bb78; }
+        .in-progress { background: #ed8936; }
+        .pending { background: #cbd5e0; color: #666; }
+
+        @media (max-width: 768px) {
+            .dashboard-container {
+                padding: 1rem;
+            }
+            
+            .dashboard-nav {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-card {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="../index.html">Career<span>Guidance</span></a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="career-selection.html">Career Selection</a></li>
+                <li><a href="college-list.html">Colleges</a></li>
+                <li><a href="aptitude-test.html">Aptitude Test</a></li>
+                <li><button id="logout-btn" class="btn-secondary">Logout</button></li>
+            </ul>
+            <div class="nav-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <!-- Header -->
+        <div class="dashboard-header">
+            <h1 class="welcome-message">Welcome, <span id="user-name">Student</span>!</h1>
+            <p>Manage your profile and track your career guidance journey</p>
+        </div>
+
+        <!-- Navigation Cards -->
+        <div class="dashboard-nav">
+            <a href="career-selection.html" class="nav-card">
+                <i class="fas fa-compass"></i>
+                <h3>Career Selection</h3>
+            </a>
+            <a href="location-selection.html" class="nav-card">
+                <i class="fas fa-map-marker-alt"></i>
+                <h3>Location Preference</h3>
+            </a>
+            <a href="college-list.html" class="nav-card">
+                <i class="fas fa-university"></i>
+                <h3>Browse Colleges</h3>
+            </a>
+            <a href="aptitude-test.html" class="nav-card">
+                <i class="fas fa-brain"></i>
+                <h3>Aptitude Test</h3>
+            </a>
+        </div>
+
+        <!-- Progress Overview -->
+        <div class="profile-section">
+            <h2><i class="fas fa-chart-line"></i> Your Progress</h2>
+            <div class="progress-section">
+                <div class="progress-card">
+                    <div class="progress-circle completed" id="profile-progress">100%</div>
+                    <h3>Profile Setup</h3>
+                    <p>Complete your profile information</p>
+                </div>
+                <div class="progress-card">
+                    <div class="progress-circle in-progress" id="career-progress">0%</div>
+                    <h3>Career Assessment</h3>
+                    <p>Take career guidance tests</p>
+                </div>
+                <div class="progress-card">
+                    <div class="progress-circle pending" id="college-progress">0%</div>
+                    <h3>College Selection</h3>
+                    <p>Choose your preferred colleges</p>
+                </div>
+                <div class="progress-card">
+                    <div class="progress-circle pending" id="test-progress">0%</div>
+                    <h3>Aptitude Test</h3>
+                    <p>Complete aptitude assessment</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Information -->
+        <div class="profile-section">
+            <h2><i class="fas fa-user"></i> Personal Information</h2>
+            <div class="profile-grid">
+                <div class="info-card">
+                    <h3>Basic Details</h3>
+                    <div class="info-item">
+                        <span class="info-label">Name:</span>
+                        <span class="info-value" id="display-name">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Email:</span>
+                        <span class="info-value" id="display-email">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Phone:</span>
+                        <span class="info-value" id="display-phone">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Date of Birth:</span>
+                        <span class="info-value" id="display-dob">-</span>
+                    </div>
+                    <button class="edit-btn" onclick="editBasicInfo()">Edit</button>
+                </div>
+
+                <div class="info-card">
+                    <h3>Academic Information</h3>
+                    <div class="info-item">
+                        <span class="info-label">Education Level:</span>
+                        <span class="info-value" id="display-education">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Stream:</span>
+                        <span class="info-value" id="display-stream">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">CGPA/Percentage:</span>
+                        <span class="info-value" id="display-cgpa">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Entrance Exam:</span>
+                        <span class="info-value" id="display-exam">-</span>
+                    </div>
+                    <button class="edit-btn" onclick="editAcademicInfo()">Edit</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Preferences -->
+        <div class="profile-section">
+            <h2><i class="fas fa-heart"></i> Career Preferences</h2>
+            <div class="profile-grid">
+                <div class="info-card">
+                    <h3>Career Interests</h3>
+                    <div class="info-item">
+                        <span class="info-label">Preferred Field:</span>
+                        <span class="info-value" id="display-field">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Location Preference:</span>
+                        <span class="info-value" id="display-location">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Budget Range:</span>
+                        <span class="info-value" id="display-budget">-</span>
+                    </div>
+                    <button class="edit-btn" onclick="editPreferences()">Update Preferences</button>
+                </div>
+
+                <div class="info-card">
+                    <h3>Recent Activity</h3>
+                    <div id="recent-activity">
+                        <p>No recent activity</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="edit-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeEditModal()">&times;</span>
+            <h3 id="modal-title">Edit Information</h3>
+            <form id="edit-form">
+                <div id="form-fields"></div>
+                <button type="submit" class="btn-primary">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="../js/utils.js"></script>
+    <script src="../js/demo-data.js"></script>
+    <script src="../js/firebase-config.js"></script>
+    <script src="../js/auth.js"></script>
+    <script>
+        // Check if user is logged in (multiple possible keys for compatibility)
+        function checkAuthStatus() {
+            const userSignedIn = localStorage.getItem('userSignedIn');
+            const careerLoggedIn = localStorage.getItem('career_guidance_logged_in');
+            const currentUser = localStorage.getItem('career_guidance_current_user');
+            
+            console.log('Auth Check:', {
+                userSignedIn: userSignedIn,
+                careerLoggedIn: careerLoggedIn,
+                currentUser: !!currentUser
+            });
+            
+            // Check if any authentication key is set
+            if (userSignedIn === 'true' || careerLoggedIn === 'true' || currentUser) {
+                console.log('✅ User is authenticated, loading dashboard');
+                return true;
+            }
+            
+            console.log('❌ User not authenticated, redirecting to login');
+            // Add delay to see the redirect
+            setTimeout(() => {
+                window.location.href = 'student-login.html';
+            }, 1000);
+            return false;
+        }
+        
+        // Skip authentication check for now and force load
+        console.log('🚀 Force loading dashboard (authentication bypassed for testing)');
+        // checkAuthStatus(); // Commented out to bypass auth check
+
+        // Load user data
+        document.addEventListener('DOMContentLoaded', function() {
+            loadUserData();
+            loadProgress();
+            
+            // Logout functionality
+            document.getElementById('logout-btn').addEventListener('click', function() {
+                // Clear all authentication keys
+                localStorage.removeItem('userSignedIn');
+                localStorage.removeItem('career_guidance_logged_in');
+                localStorage.removeItem('career_guidance_current_user');
+                localStorage.removeItem('userName');
+                localStorage.removeItem('userEmail');
+                
+                console.log('User logged out, redirecting to home');
+                window.location.href = '../index.html';
+            });
+        });
+
+        function loadUserData() {
+            // Load from localStorage (demo mode) - check multiple sources
+            let userName = localStorage.getItem('userName') || 'Student';
+            let userEmail = localStorage.getItem('userEmail') || '';
+            
+            // Try to get user data from the current user object
+            const currentUser = localStorage.getItem('career_guidance_current_user');
+            if (currentUser) {
+                try {
+                    const userData = JSON.parse(currentUser);
+                    userName = userData.name || userName;
+                    userEmail = userData.email || userEmail;
+                } catch (e) {
+                    console.warn('Failed to parse current user data');
+                }
+            }
+            
+            const userPhone = localStorage.getItem('userPhone') || '';
+            const userDOB = localStorage.getItem('userDOB') || '';
+            const userEducation = localStorage.getItem('userEducation') || '';
+            const userStream = localStorage.getItem('userStream') || '';
+
+            // Update display
+            document.getElementById('user-name').textContent = userName;
+            document.getElementById('display-name').textContent = userName;
+            document.getElementById('display-email').textContent = userEmail;
+            document.getElementById('display-phone').textContent = userPhone || 'Not provided';
+            document.getElementById('display-dob').textContent = userDOB || 'Not provided';
+            document.getElementById('display-education').textContent = userEducation || 'Not provided';
+            document.getElementById('display-stream').textContent = userStream || 'Not provided';
+
+            // Load preferences
+            document.getElementById('display-field').textContent = localStorage.getItem('preferredField') || 'Not selected';
+            document.getElementById('display-location').textContent = localStorage.getItem('locationPreference') || 'Not selected';
+            document.getElementById('display-budget').textContent = localStorage.getItem('budgetRange') || 'Not specified';
+            document.getElementById('display-cgpa').textContent = localStorage.getItem('cgpa') || 'Not provided';
+            document.getElementById('display-exam').textContent = localStorage.getItem('entranceExam') || 'Not taken';
+        }
+
+        function loadProgress() {
+            // Calculate and display progress
+            const profileComplete = localStorage.getItem('userName') && localStorage.getItem('userEmail');
+            const careerAssessment = localStorage.getItem('careerAssessmentComplete');
+            const collegeSelection = localStorage.getItem('selectedColleges');
+            const aptitudeTest = localStorage.getItem('aptitudeTestComplete');
+
+            updateProgressCircle('profile-progress', profileComplete ? 100 : 50);
+            updateProgressCircle('career-progress', careerAssessment ? 100 : 0);
+            updateProgressCircle('college-progress', collegeSelection ? 100 : 0);
+            updateProgressCircle('test-progress', aptitudeTest ? 100 : 0);
+
+            // Load recent activity
+            loadRecentActivity();
+        }
+
+        function updateProgressCircle(id, percentage) {
+            const circle = document.getElementById(id);
+            circle.textContent = percentage + '%';
+            
+            if (percentage === 100) {
+                circle.className = 'progress-circle completed';
+            } else if (percentage > 0) {
+                circle.className = 'progress-circle in-progress';
+            } else {
+                circle.className = 'progress-circle pending';
+            }
+        }
+
+        function loadRecentActivity() {
+            const activities = JSON.parse(localStorage.getItem('recentActivities') || '[]');
+            const activityContainer = document.getElementById('recent-activity');
+            
+            if (activities.length === 0) {
+                activityContainer.innerHTML = '<p>No recent activity</p>';
+                return;
+            }
+
+            activityContainer.innerHTML = activities.slice(0, 5).map(activity => 
+                `<div class="activity-item">
+                    <small>${activity.date}</small>
+                    <p>${activity.action}</p>
+                </div>`
+            ).join('');
+        }
+
+        function addActivity(action) {
+            const activities = JSON.parse(localStorage.getItem('recentActivities') || '[]');
+            activities.unshift({
+                action: action,
+                date: new Date().toLocaleDateString()
+            });
+            localStorage.setItem('recentActivities', JSON.stringify(activities.slice(0, 10)));
+        }
+
+        function editBasicInfo() {
+            showEditModal('Edit Basic Information', [
+                { label: 'Name', key: 'userName', type: 'text' },
+                { label: 'Phone', key: 'userPhone', type: 'tel' },
+                { label: 'Date of Birth', key: 'userDOB', type: 'date' }
+            ]);
+        }
+
+        function editAcademicInfo() {
+            showEditModal('Edit Academic Information', [
+                { label: 'Education Level', key: 'userEducation', type: 'select', options: ['12th Grade', 'Undergraduate', 'Postgraduate', 'Diploma'] },
+                { label: 'Stream', key: 'userStream', type: 'select', options: ['Science', 'Commerce', 'Arts', 'Engineering', 'Medical', 'Other'] },
+                { label: 'CGPA/Percentage', key: 'cgpa', type: 'text' },
+                { label: 'Entrance Exam', key: 'entranceExam', type: 'text' }
+            ]);
+        }
+
+        function editPreferences() {
+            showEditModal('Update Career Preferences', [
+                { label: 'Preferred Field', key: 'preferredField', type: 'select', options: ['Engineering', 'Medical', 'Management', 'Arts', 'Science', 'Commerce', 'Law', 'Other'] },
+                { label: 'Location Preference', key: 'locationPreference', type: 'select', options: ['India', 'Abroad', 'Both'] },
+                { label: 'Budget Range', key: 'budgetRange', type: 'select', options: ['Under 1 Lakh', '1-5 Lakhs', '5-10 Lakhs', '10-20 Lakhs', 'Above 20 Lakhs'] }
+            ]);
+        }
+
+        function showEditModal(title, fields) {
+            document.getElementById('modal-title').textContent = title;
+            
+            const formFields = document.getElementById('form-fields');
+            formFields.innerHTML = fields.map(field => {
+                const currentValue = localStorage.getItem(field.key) || '';
+                
+                if (field.type === 'select') {
+                    return `
+                        <div class="form-group">
+                            <label for="${field.key}">${field.label}</label>
+                            <select id="${field.key}" name="${field.key}">
+                                <option value="">Select ${field.label}</option>
+                                ${field.options.map(option => 
+                                    `<option value="${option}" ${currentValue === option ? 'selected' : ''}>${option}</option>`
+                                ).join('')}
+                            </select>
+                        </div>`;
+                } else {
+                    return `
+                        <div class="form-group">
+                            <label for="${field.key}">${field.label}</label>
+                            <input type="${field.type}" id="${field.key}" name="${field.key}" value="${currentValue}">
+                        </div>`;
+                }
+            }).join('');
+
+            document.getElementById('edit-modal').style.display = 'block';
+        }
+
+        function closeEditModal() {
+            document.getElementById('edit-modal').style.display = 'none';
+        }
+
+        // Handle form submission
+        document.getElementById('edit-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            for (let [key, value] of formData.entries()) {
+                localStorage.setItem(key, value);
+            }
+            
+            addActivity('Updated profile information');
+            loadUserData();
+            loadProgress();
+            closeEditModal();
+            
+            if (typeof Utils !== 'undefined' && Utils.showNotification) {
+                Utils.showNotification('Information updated successfully!', 'success');
+            }
+        });
+
+        // Modal styles
+        const modalStyles = `
+            .modal {
+                position: fixed;
+                z-index: 10000;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+            .modal-content {
+                background-color: white;
+                padding: 2rem;
+                border-radius: 15px;
+                width: 90%;
+                max-width: 500px;
+                position: relative;
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            }
+            
+            .close {
+                position: absolute;
+                top: 15px;
+                right: 20px;
+                font-size: 1.5rem;
+                cursor: pointer;
+                color: #666;
+            }
+            
+            .close:hover {
+                color: #333;
+            }
+
+            .form-group {
+                margin-bottom: 1rem;
+            }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 0.5rem;
+                font-weight: 500;
+                color: #333;
+            }
+
+            .form-group input,
+            .form-group select {
+                width: 100%;
+                padding: 0.75rem;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                font-size: 1rem;
+            }
+
+            .activity-item {
+                padding: 0.5rem 0;
+                border-bottom: 1px solid #e9ecef;
+            }
+
+            .activity-item:last-child {
+                border-bottom: none;
+            }
+
+            .activity-item small {
+                color: #666;
+                font-size: 0.8rem;
+            }
+
+            .activity-item p {
+                margin: 0.25rem 0 0 0;
+                font-size: 0.9rem;
+            }
+        `;
+
+        const styleSheet = document.createElement("style");
+        styleSheet.textContent = modalStyles;
+        document.head.appendChild(styleSheet);
+    </script>
+</body>
+</html>

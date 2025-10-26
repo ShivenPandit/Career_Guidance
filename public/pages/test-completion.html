@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Completion - Career Guidance</title>
+    <meta name="description" content="View your aptitude test results and next steps">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        .completion-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: #f8f9fa;
+            min-height: 100vh;
+        }
+
+        .completion-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+            border-radius: 15px;
+        }
+
+        .completion-header.failed {
+            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+        }
+
+        .completion-header h1 {
+            margin-bottom: 1rem;
+            font-size: 2.5rem;
+        }
+
+        .completion-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .results-main {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .results-sidebar {
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            height: fit-content;
+        }
+
+        .score-overview {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .score-card {
+            text-align: center;
+            padding: 1.5rem;
+            border-radius: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .score-card.overall {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        }
+
+        .score-card.failed {
+            background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+        }
+
+        .score-value {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .score-label {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .section-breakdown {
+            margin-bottom: 2rem;
+        }
+
+        .section-breakdown h3 {
+            color: #333;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .section-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-info {
+            flex: 1;
+        }
+
+        .section-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .section-details {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .section-score {
+            text-align: center;
+            margin: 0 1rem;
+        }
+
+        .section-score-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .section-score-total {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .section-progress {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .progress-excellent { background: #48bb78; }
+        .progress-good { background: #38a169; }
+        .progress-average { background: #ed8936; }
+        .progress-poor { background: #f56565; }
+
+        .recommendations {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .recommendations h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .recommendation-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem;
+            background: white;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+            border-left: 4px solid #667eea;
+        }
+
+        .recommendation-icon {
+            color: #667eea;
+            margin-top: 0.25rem;
+        }
+
+        .college-status {
+            margin-bottom: 2rem;
+        }
+
+        .college-status h3 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 0.5rem;
+        }
+
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-approved {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-rejected {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .next-steps {
+            background: #e8f5e8;
+            border: 1px solid #c3e6c3;
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .next-steps h3 {
+            color: #155724;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .steps-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .steps-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0;
+            color: #155724;
+        }
+
+        .step-number {
+            width: 24px;
+            height: 24px;
+            background: #155724;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary, .btn-secondary, .btn-success {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-primary:hover, .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .completion-container {
+                padding: 1rem;
+            }
+
+            .completion-header h1 {
+                font-size: 2rem;
+            }
+
+            .results-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .score-overview {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn-primary, .btn-secondary, .btn-success {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <a href="../index.html">Career<span>Guidance</span></a>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="student-details.html">Dashboard</a></li>
+                <li><a href="college-selection.html">College Selection</a></li>
+                <li><a href="career-selection.html">Career Selection</a></li>
+            </ul>
+            <div class="nav-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="completion-container">
+        <!-- Header -->
+        <div class="completion-header" id="completion-header">
+            <div class="completion-icon" id="completion-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h1 id="completion-title">Test Completed Successfully!</h1>
+            <p id="completion-message">Congratulations! You have successfully completed the aptitude test.</p>
+        </div>
+
+        <div class="results-grid">
+            <!-- Main Results -->
+            <div class="results-main">
+                <!-- Score Overview -->
+                <div class="score-overview">
+                    <div class="score-card overall" id="overall-card">
+                        <div class="score-value" id="overall-score">78%</div>
+                        <div class="score-label">Overall Score</div>
+                    </div>
+                    <div class="score-card">
+                        <div class="score-value" id="total-questions">70</div>
+                        <div class="score-label">Total Questions</div>
+                    </div>
+                    <div class="score-card">
+                        <div class="score-value" id="correct-answers">55</div>
+                        <div class="score-label">Correct Answers</div>
+                    </div>
+                    <div class="score-card">
+                        <div class="score-value" id="time-taken">78</div>
+                        <div class="score-label">Minutes Taken</div>
+                    </div>
+                </div>
+
+                <!-- Section Breakdown -->
+                <div class="section-breakdown">
+                    <h3><i class="fas fa-chart-bar"></i> Section-wise Performance</h3>
+                    
+                    <div class="section-item">
+                        <div class="section-info">
+                            <div class="section-name">Verbal Ability</div>
+                            <div class="section-details">25 questions • English comprehension, vocabulary, grammar</div>
+                        </div>
+                        <div class="section-score">
+                            <div class="section-score-value" id="verbal-score">20</div>
+                            <div class="section-score-total">/ 25</div>
+                        </div>
+                        <div class="section-progress progress-good" id="verbal-progress">80%</div>
+                    </div>
+                    
+                    <div class="section-item">
+                        <div class="section-info">
+                            <div class="section-name">Quantitative Aptitude</div>
+                            <div class="section-details">25 questions • Mathematics, logical reasoning, data analysis</div>
+                        </div>
+                        <div class="section-score">
+                            <div class="section-score-value" id="quant-score">18</div>
+                            <div class="section-score-total">/ 25</div>
+                        </div>
+                        <div class="section-progress progress-average" id="quant-progress">72%</div>
+                    </div>
+                    
+                    <div class="section-item">
+                        <div class="section-info">
+                            <div class="section-name">General Knowledge</div>
+                            <div class="section-details">20 questions • Current affairs, science, history, geography</div>
+                        </div>
+                        <div class="section-score">
+                            <div class="section-score-value" id="gk-score">17</div>
+                            <div class="section-score-total">/ 20</div>
+                        </div>
+                        <div class="section-progress progress-excellent" id="gk-progress">85%</div>
+                    </div>
+                </div>
+
+                <!-- Recommendations -->
+                <div class="recommendations">
+                    <h3><i class="fas fa-lightbulb"></i> Personalized Recommendations</h3>
+                    
+                    <div id="recommendations-list">
+                        <!-- Recommendations will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="results-sidebar">
+                <!-- College Application Status -->
+                <div class="college-status">
+                    <h3><i class="fas fa-university"></i> College Status</h3>
+                    <div id="college-status-list">
+                        <!-- College statuses will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Next Steps -->
+                <div class="next-steps">
+                    <h3><i class="fas fa-route"></i> Next Steps</h3>
+                    <ol class="steps-list">
+                        <li>
+                            <span class="step-number">1</span>
+                            <span>Wait for college responses</span>
+                        </li>
+                        <li>
+                            <span class="step-number">2</span>
+                            <span>Prepare for interviews</span>
+                        </li>
+                        <li>
+                            <span class="step-number">3</span>
+                            <span>Complete admission formalities</span>
+                        </li>
+                        <li>
+                            <span class="step-number">4</span>
+                            <span>Submit required documents</span>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button onclick="downloadCertificate()" class="btn-secondary">
+                <i class="fas fa-download"></i> Download Certificate
+            </button>
+            <button onclick="viewDetailedReport()" class="btn-primary">
+                <i class="fas fa-file-alt"></i> Detailed Report
+            </button>
+            <a href="student-details.html" class="btn-success">
+                <i class="fas fa-home"></i> Go to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="../js/utils.js"></script>
+    <script>
+        let testResults = {};
+        let selectedColleges = [];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadTestResults();
+            loadCollegeStatus();
+            generateRecommendations();
+            
+            // Mark test as completed
+            localStorage.setItem('aptitudeTestComplete', 'true');
+            addActivity('Completed aptitude test with score: ' + (testResults.overallScore || '78') + '%');
+        });
+
+        function loadTestResults() {
+            // Load test results from localStorage or generate demo results
+            const savedResults = localStorage.getItem('aptitudeTestResults');
+            
+            if (savedResults) {
+                testResults = JSON.parse(savedResults);
+            } else {
+                // Generate demo results
+                testResults = generateDemoResults();
+                localStorage.setItem('aptitudeTestResults', JSON.stringify(testResults));
+            }
+
+            updateResultsDisplay();
+        }
+
+        function generateDemoResults() {
+            const verbalScore = Math.floor(Math.random() * 8) + 18; // 18-25
+            const quantScore = Math.floor(Math.random() * 8) + 15; // 15-22
+            const gkScore = Math.floor(Math.random() * 6) + 15; // 15-20
+            
+            const totalScore = verbalScore + quantScore + gkScore;
+            const totalQuestions = 70;
+            const overallPercentage = Math.round((totalScore / totalQuestions) * 100);
+            
+            return {
+                verbalScore,
+                quantScore,
+                gkScore,
+                totalScore,
+                totalQuestions,
+                overallScore: overallPercentage,
+                timeTaken: Math.floor(Math.random() * 30) + 60, // 60-90 minutes
+                passed: overallPercentage >= 60,
+                completedAt: new Date().toISOString()
+            };
+        }
+
+        function updateResultsDisplay() {
+            // Update header based on pass/fail
+            const header = document.getElementById('completion-header');
+            const icon = document.getElementById('completion-icon');
+            const title = document.getElementById('completion-title');
+            const message = document.getElementById('completion-message');
+            const overallCard = document.getElementById('overall-card');
+
+            if (testResults.passed) {
+                header.classList.remove('failed');
+                icon.innerHTML = '<i class="fas fa-check-circle"></i>';
+                title.textContent = 'Test Completed Successfully!';
+                message.textContent = 'Congratulations! You have passed the aptitude test and are eligible for college admissions.';
+                overallCard.classList.remove('failed');
+            } else {
+                header.classList.add('failed');
+                icon.innerHTML = '<i class="fas fa-times-circle"></i>';
+                title.textContent = 'Test Completed';
+                message.textContent = 'You have completed the test. While you didn\'t reach the passing score, you can retake the test after 7 days.';
+                overallCard.classList.add('failed');
+            }
+
+            // Update score displays
+            document.getElementById('overall-score').textContent = testResults.overallScore + '%';
+            document.getElementById('total-questions').textContent = testResults.totalQuestions;
+            document.getElementById('correct-answers').textContent = testResults.totalScore;
+            document.getElementById('time-taken').textContent = testResults.timeTaken;
+
+            // Update section scores
+            document.getElementById('verbal-score').textContent = testResults.verbalScore;
+            document.getElementById('quant-score').textContent = testResults.quantScore;
+            document.getElementById('gk-score').textContent = testResults.gkScore;
+
+            // Update section percentages
+            const verbalPercent = Math.round((testResults.verbalScore / 25) * 100);
+            const quantPercent = Math.round((testResults.quantScore / 25) * 100);
+            const gkPercent = Math.round((testResults.gkScore / 20) * 100);
+
+            document.getElementById('verbal-progress').textContent = verbalPercent + '%';
+            document.getElementById('quant-progress').textContent = quantPercent + '%';
+            document.getElementById('gk-progress').textContent = gkPercent + '%';
+
+            // Update progress colors
+            updateProgressColor('verbal-progress', verbalPercent);
+            updateProgressColor('quant-progress', quantPercent);
+            updateProgressColor('gk-progress', gkPercent);
+        }
+
+        function updateProgressColor(elementId, percentage) {
+            const element = document.getElementById(elementId);
+            element.className = 'section-progress';
+            
+            if (percentage >= 85) element.classList.add('progress-excellent');
+            else if (percentage >= 75) element.classList.add('progress-good');
+            else if (percentage >= 60) element.classList.add('progress-average');
+            else element.classList.add('progress-poor');
+        }
+
+        function loadCollegeStatus() {
+            selectedColleges = JSON.parse(localStorage.getItem('selectedColleges') || '[]');
+            const container = document.getElementById('college-status-list');
+            
+            if (selectedColleges.length === 0) {
+                container.innerHTML = `
+                    <div class="status-item">
+                        <span>No colleges selected</span>
+                    </div>
+                `;
+                return;
+            }
+
+            // Generate random statuses for demo
+            const statuses = ['approved', 'pending', 'pending', 'approved', 'rejected'];
+            
+            container.innerHTML = selectedColleges.map((college, index) => {
+                const status = testResults.passed ? 
+                    (statuses[index % statuses.length] || 'pending') : 'rejected';
+                
+                return `
+                    <div class="status-item">
+                        <div>
+                            <strong>${college.name}</strong>
+                            <div style="font-size: 0.8rem; color: #666;">${college.location}</div>
+                        </div>
+                        <span class="status-badge status-${status}">
+                            ${status.charAt(0).toUpperCase() + status.slice(1)}
+                        </span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function generateRecommendations() {
+            const container = document.getElementById('recommendations-list');
+            const recommendations = [];
+
+            if (testResults.passed) {
+                recommendations.push({
+                    icon: 'fas fa-trophy',
+                    text: 'Excellent performance! You\'re eligible for all selected colleges.'
+                });
+
+                if (testResults.verbalScore < 20) {
+                    recommendations.push({
+                        icon: 'fas fa-book',
+                        text: 'Consider improving your English skills with additional reading and vocabulary practice.'
+                    });
+                }
+
+                if (testResults.quantScore < 18) {
+                    recommendations.push({
+                        icon: 'fas fa-calculator',
+                        text: 'Strengthen your mathematical concepts before college admission interviews.'
+                    });
+                }
+
+                recommendations.push({
+                    icon: 'fas fa-handshake',
+                    text: 'Prepare for college interviews and document verification process.'
+                });
+
+                recommendations.push({
+                    icon: 'fas fa-calendar-alt',
+                    text: 'Keep track of admission deadlines and fee payment dates.'
+                });
+            } else {
+                recommendations.push({
+                    icon: 'fas fa-redo',
+                    text: 'You can retake the test after 7 days. Focus on your weak areas for better performance.'
+                });
+
+                recommendations.push({
+                    icon: 'fas fa-study',
+                    text: 'Consider additional preparation courses or study materials.'
+                });
+
+                recommendations.push({
+                    icon: 'fas fa-users',
+                    text: 'Seek guidance from counselors or mentors for study strategies.'
+                });
+            }
+
+            container.innerHTML = recommendations.map(rec => `
+                <div class="recommendation-item">
+                    <i class="${rec.icon} recommendation-icon"></i>
+                    <span>${rec.text}</span>
+                </div>
+            `).join('');
+        }
+
+        function downloadCertificate() {
+            if (typeof Utils !== 'undefined' && Utils.showNotification) {
+                Utils.showNotification('Certificate download started', 'success');
+            }
+            // In a real application, this would generate and download a PDF certificate
+            addActivity('Downloaded test completion certificate');
+        }
+
+        function viewDetailedReport() {
+            if (typeof Utils !== 'undefined' && Utils.showNotification) {
+                Utils.showNotification('Loading detailed performance report...', 'info');
+            }
+            // In a real application, this would show a detailed analysis
+            addActivity('Viewed detailed test report');
+        }
+
+        function addActivity(action) {
+            const activities = JSON.parse(localStorage.getItem('recentActivities') || '[]');
+            activities.unshift({
+                action: action,
+                date: new Date().toLocaleDateString()
+            });
+            localStorage.setItem('recentActivities', JSON.stringify(activities.slice(0, 10)));
+        }
+    </script>
+</body>
+</html>

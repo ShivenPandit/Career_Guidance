@@ -1,0 +1,93 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Users collection - users can read/write their own data
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Colleges collection - public read, admin write
+    match /colleges/{collegeId} {
+      allow read: if true;
+      allow write: if request.auth != null && 
+                      get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    // Applications collection - user specific
+    match /applications/{applicationId} {
+      allow read, write: if request.auth != null && 
+                            resource.data.userId == request.auth.uid;
+    }
+    
+    // Test results collection - user specific
+    match /testResults/{resultId} {
+      allow read, write: if request.auth != null && 
+                            resource.data.userId == request.auth.uid;
+    }
+    
+    // Career preferences - user specific
+    match /careerPreferences/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Location preferences - user specific  
+    match /locationPreferences/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // College applications - college admins can read applications to their colleges
+    match /collegeApplications/{applicationId} {
+      allow read: if request.auth != null && 
+                     (resource.data.userId == request.auth.uid || 
+                      resource.data.collegeId in 
+                      get(/databases/$(database)/documents/users/$(request.auth.uid)).data.collegeIds);
+      allow write: if request.auth != null && resource.data.userId == request.auth.uid;
+    }
+    
+    // Questions collection - public read, admin write
+    match /questions/{questionId} {
+      allow read: if true;
+      allow write: if request.auth != null && 
+                      get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    // Admin collection - admin only
+    match /admin/{document=**} {
+      allow read, write: if request.auth != null && 
+                            get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    // Public data - read only for all
+    match /publicData/{document=**} {
+      allow read: if true;
+      allow write: if request.auth != null && 
+                      get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    // Analytics data - admin only
+    match /analytics/{document=**} {
+      allow read, write: if request.auth != null && 
+                            get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    // Error logs - system write, admin read
+    match /errors/{errorId} {
+      allow read: if request.auth != null && 
+                     get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+      allow write: if request.auth != null;
+    }
+    
+    // User feedback - user write, admin read
+    match /feedback/{feedbackId} {
+      allow read: if request.auth != null && 
+                     get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+      allow write: if request.auth != null;
+    }
+    
+    // Default deny rule
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
